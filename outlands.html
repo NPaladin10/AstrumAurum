@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title>Outlands Hack</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Aclonica">
+    <link rel="stylesheet" type="text/css" href="lib/noty.3.1.4.min.css">
+    <link rel="stylesheet" type="text/css" href="lib/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="src/main.css">
+    <link rel="stylesheet" type="text/css" href="src/statblock.css">
+  </head>
+  <body>
+    <div id="ui-main" class="w-100" align="center">
+      <!--MENU---------------------------------------------->
+      <div class="d-flex justify-content-between m-1" style="z-index:100">
+        <div>
+          <h1>Outlands</h1>
+        </div>
+        <div class="d-flex flex-row-reverse">
+          <div class="m-2">
+            <a class="btn btn-info btn-sm" data-toggle="collapse" href="#menu-list" role="button">
+              <img src="media/md-menu.svg" height="20" width="20">
+            </a>
+          </div>
+          <div class="card collapse" id="menu-list" style="position: absolute;width:200px;right:50px;z-index:100">
+            <div class="card card-body p-1">
+              <button type="button" class="btn btn-block btn-info" @click="show='about'" data-toggle="collapse" href="#menu-list">About</button>
+              <button type="button" class="btn btn-block btn-info" @click="show='rules'" data-toggle="collapse" href="#menu-list">Rules</button>
+              <button type="button" class="btn btn-block btn-info" @click="show='outlands'" data-toggle="collapse" href="#menu-list">Overview</button>
+              <button type="button" class="btn btn-block btn-info" @click="show='setting'" data-toggle="collapse" href="#menu-list">Setting</button>
+              <button type="button" class="btn btn-block btn-info" @click="show='factions'" data-toggle="collapse" href="#menu-list">Factions</button>
+              <button type="button" class="btn btn-block btn-info" @click="show='generators'" data-toggle="collapse" href="#menu-list">Generators</button>
+              <button type="button" class="btn btn-block btn-danger mt-4" @click="reset()" data-toggle="collapse" href="#menu-list">Reset Game</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--END MENU---------------------------------------------->
+      <component v-bind:is="show" style="z-index:0"></component>
+      <div id="map">
+        <svg height="0" width="0"></svg>
+      </div>
+      <!--FOOTER---------------------------------------------->
+      <!--END FOOTER---------------------------------------------->
+    </div>
+    <template>
+      <!--MAIN DISPLAY---------------------------------------------->
+      <div class="p-1 border" v-if="show>-1" v-cloak>
+        <sector-list v-if="show == 0"></sector-list>
+        <!--ZONE 1---------------------------------------------->
+        <div class="m-1 p-1" v-if="show==1" style="" v-cloak>
+          <h4 class="m-0">{{zone.sector.name}}, {{zone.region.name}}</h4>
+          <div>{{zone.parent.info}}</div>
+          <h5 class="m-0" v-if="coreIds.includes(zone.id)">{{zone.name}}</h5>
+          <input class="form-control" type="text" v-model="zone.name" v-if="!zone.isCore">
+          <div>{{zone.info}}</div>
+          <div>{{zone.terrain}} {{zone.known}}</div>
+          <div class="my-1">
+            <button type="button" class="btn btn-light mx-1" v-for="(a,i) in zone.areas" @click="aid= aid==i?-1:i">{{a}}</button>
+            <div class="p-1 border" v-if="aid>-1 && aid >= zone.nCoreA">
+              <input class="form-control" type="text" v-model="area[0]">
+              <textarea class="form-control" :placeholder="'Info about '+area[0]" v-model="area[2]"></textarea>
+            </div>
+            <div class="p-1 border" v-if="aid>-1 && aid < zone.nCoreA" align="left">
+              <span class="font-weight-bold">{{area[0]}}.</span>
+              <span>{{area[2]}}</span>
+            </div>
+          </div>
+          <div class="d-flex justify-content-around">
+            <div>
+              <span class="font-weight-bold" v-if="zone.resources.n,length>0">Needs</span>
+              <p class="m-0" v-for="n in zone.resources.n">{{n}}</p>
+            </div>
+            <div>
+              <span class="font-weight-bold" v-if="zone.resources.s.length>0">Surplus</span>
+              <p class="m-0" v-for="s in zone.resources.s">{{s}}</p>
+            </div>
+          </div>
+          <div class="border p-1" v-if="zone.parties.length>0">
+            <div class="border" v-for="p in zone.parties">
+              <div class="btn-group w-100" role="group">
+                <button class="btn btn-block btn-light" type="button" @click="showParty(p)">{{p.name}}</button>
+                <button class="btn btn-success" type="button" @click="moveP=p">Move</button>
+                <button class="btn btn-warning" type="button" @click="addChallenge(p)">+Challenge</button>
+              </div>
+            </div>
+            <party-data class="p-1 border" :party="party" v-if="party.id" v-cloak></party-data>
+            <div class="input-group" v-if="moveP">
+              <div class="input-group-prepend">
+                <span class="input-group-text">Where</span>
+              </div>
+              <select class="custom-select" v-model="moveTo">
+                <option v-for="p in allPlaces" :value="p.id">{{p.name}}</option>
+              </select>
+              <div class="input-group-append">
+                <button class="btn btn-success" type="button" @click="moveParty()">Move {{moveP.name}}</button>
+                <button class="btn btn-info" type="button" @click="moveP=null">Cancel</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--END ZONE---------------------------------------------->
+        <!--HERO---------------------------------------------->
+        <component-hero class="mt-1 p-1" v-if="show==2" v-cloak></component-hero>
+        <!--SITUATION 3---------------------------------------------->
+        <div class="m-1 p-1" v-if="show==3" v-cloak>
+          <component v-bind:is="situationId"></component>
+        </div>
+        <!--END SITUATION 3---------------------------------------------->
+        <!--PARTY 4---------------------------------------------->
+        <div class="m-1 p-1" v-if="show==4" v-cloak>
+          <component-party></component-party>
+        </div>
+        <!--END PARTY 4---------------------------------------------->
+        <!--FACTIONS 5---------------------------------------------->
+        <factions class="mt-2 p-1" v-if="show==5" v-cloak></factions>
+        <!--CHALLENGE---------------------------------------------->
+        <challenge class="mt-2 p-1" v-if="show==6" v-cloak></challenge>
+      </div>
+      <!--END OVERHEAD---------------------------------------------->
+    </template>
+    <template id="component-hero">
+      <!--HEROES 2---------------------------------------------->
+      <div>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <button class="btn btn-info" type="button" @click="close()">Close</button>
+            <button class="btn btn-success" type="button" @click="add()">New</button>
+            <span class="input-group-text">Heroes</span>
+          </div>
+          <select class="custom-select" v-model="hLoad">
+            <option v-for="(n,i) in heroesToLoad" :value="i+1">{{n}}</option>
+          </select>
+          <div class="input-group-append">
+            <button class="btn btn-info" type="button" @click="load()">Load</button>
+          </div>
+        </div>
+        <!--Name---------------------------------------------->
+        <div class="my-1" v-if="hero">
+          <h4>Hero</h4>
+          <input class="form-control" type="text" placeholder="Hero Name" v-model="hero.name">
+          <div class="m-1" v-if="hero.party">
+            <h6>Party: {{hero.partyInfo.name}}</h6>
+          </div>
+          <div class="btn-group my-1" role="group">
+            <button type="button" class="btn btn-light">{{stressName}} {{stress[1]}}</button>
+            <button type="button" class="btn btn-secondary" @click="modStress(1,1)" :disabled="stress[1]==stress[0]">&plus;</button>
+            <button type="button" class="btn btn-secondary" @click="modStress(1,-1)" :disabled="stress[1]==0">&minus;</button>
+            <button type="button" class="btn btn-light">Max {{hero.stress[0]}}</button>
+            <button type="button" class="btn btn-secondary" @click="modStress(0,1)">&plus;</button>
+            <button type="button" class="btn btn-secondary" @click="modStress(0,-1)" :disabled="stress[0]==0">&minus;</button>
+          </div>
+          <!--Aspects---------------------------------------------->
+          <div class="h-double-border">
+            <h5 class="m-0">
+              <span>Aspects</span>
+              <button class="btn btn-success btn-sm ml-2" type="button" @click="hero.aspects.push('')">Add</button>
+            </h5>
+            <div class="font-sm font-weight-bold">People/Background - Playbook - Contacts - Bonds - Harm</div>
+          </div>
+          <div class="input-group" v-for="(a,i) in hero.aspects">
+            <input class="form-control" type="text" placeholder="Aspect Information" v-model="hero.aspects[i]">
+            <div class="input-group-append">
+              <button class="btn btn-warning" type="button" @click="hero.aspects.splice(i,1)">&#10008;</button>
+            </div>
+          </div>
+          <!--PROGRESS---------------------------------------------->
+          <h5 class="h-double-border mt-1" align="center">
+            <span>Progress Tracks</span>
+            <button class="btn btn-success btn-sm ml-2" type="button" @click="addVow()">Add</button>
+            <div class="font-sm font-weight-bold">Vows - Journeys - Negotiations</div>
+          </h5>
+          <progress-track class="p-1 border" v-for="(v,i) in hero.vows" :i="i" :all="hero.vows"></progress-track>
+          <!--STATS---------------------------------------------->
+          <h5 class="h-double-border">Ability Scores</h5>
+          <div class="d-flex flex-wrap justify-content-center">
+            <div class="btn-group btn-group-sm mx-1" role="group" v-for="(s,i) in stats">
+              <button type="button" class="btn btn-light">
+                {{statNames[i]}} {{s}}/<span v-if="hero.statBonus[i]>-1">+</span>
+                <span>{{hero.statBonus[i]}}</span>
+              </button>
+              <button type="button" class="btn btn-secondary" @click="modStat(i,1)" :disabled="s==18">&plus;</button>
+              <button type="button" class="btn btn-secondary" @click="modStat(i,-1)" :disabled="s==3">&minus;</button>
+            </div>
+          </div>
+          <!--Special Ability---------------------------------------------->
+          <h5 class="h-double-border mt-1 d-flex justify-content-center align-items-center">
+            <span>Special Ability</span>
+            <div class="btn-group btn-group-sm ml-2" role="group">
+              <button type="button" class="btn btn-success" @click="newItem('ability')">New</button>
+              <button type="button" class="btn btn-info" @click="toLoad='ability',loadId=0">Load</button>
+            </div>
+          </h5>
+          <!--New Ability---------------------------------------------->
+          <div class="p-1 m-1" v-if="newAbility">
+            <div class="input-group">
+              <input class="form-control" type="text" placeholder="New Ability" v-model="newAbility.n">
+              <input class="form-control" type="text" placeholder="Playbook" v-model="newAbility.b">
+              <div class="input-group-append">
+                <button class="btn btn-success" type="button" @click="saveItem('ability')">&#10004;</button>
+                <button class="btn btn-warning" type="button" @click="newAbility=null">&#10008;</button>
+              </div>
+            </div>
+            <textarea class="form-control" placeholder="Ability info in HTML/text" v-model="newAbility.t"></textarea>
+          </div>
+          <!--Load Abilities---------------------------------------------->
+          <div class="p-1 m-1" v-if="toLoad=='ability' && allAbilities.length>0">
+            <div class="input-group">
+              <select class="custom-select" v-model="loadId">
+                <option v-for="(a,i) in allAbilities" :value="i">{{a.b}} - {{a.n}}</option>
+              </select>
+              <div class="input-group-append">
+                <button class="btn btn-success" type="button" @click="loadItem()">Add</button>
+                <button class="btn btn-warning" type="button" @click="toLoad=''">&#10008;</button>
+              </div>
+            </div>
+            <div v-html="allAbilities[loadId].t" align="left"></div>
+          </div>
+          <!--Ability List---------------------------------------------->
+          <div class="border p-1" v-for="(a,i) in hero.abilityText">
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="font-weight-bold">{{a.name}}</div>
+              <div class="btn-group btn-group-sm" role="group">
+                <button class="btn btn-success" type="button" @click="editItem(hero.ability[i],'ability')" v-if="hero.ability[i]>=0">&#9998;</button>
+                <button class="btn btn-warning" type="button" @click="hero.ability.splice(i,1)">&#10008;</button>
+              </div>
+            </div>
+            <div style="font-size:small;" v-html="a.text" align="left"></div>
+          </div>
+          <!--Assets---------------------------------------------->
+          <h5 class="h-double-border mt-1 d-flex justify-content-center align-items-center">
+            <span>Assets</span>
+            <div class="btn-group btn-group-sm ml-2" role="group">
+              <button type="button" class="btn btn-success" @click="newItem('asset')">New</button>
+              <button type="button" class="btn btn-info" @click="toLoad='asset',loadId=0">Load</button>
+            </div>
+          </h5>
+          <!--Load Assets---------------------------------------------->
+          <div class="p-1 m-1" v-if="toLoad=='asset'">
+            <div class="input-group">
+              <select class="custom-select" v-model="loadId">
+                <option v-for="a in allAssets" :value="a[0]">{{a[2]}}</option>
+              </select>
+              <div class="input-group-append">
+                <button class="btn btn-success" type="button" @click="loadItem()">Add</button>
+                <button class="btn btn-warning" type="button" @click="toLoad=''">&#10008;</button>
+              </div>
+            </div>
+          </div>
+          <!--New Assets---------------------------------------------->
+          <div class="p-1 m-1" v-if="newAsset">
+            <div class="input-group">
+              <input class="form-control" type="text" v-model="newAsset[1]">
+              <div class="input-group-append">
+                <button class="btn btn-success" type="button" @click="saveItem('asset')">&#10004;</button>
+                <button class="btn btn-warning" type="button" @click="newAsset=null">&#10008;</button>
+              </div>
+            </div>
+            <input class="form-control" type="text" v-model="newAsset[2]">
+            <div class="input-group">
+              <select class="custom-select" v-model="newAsset[0]" @change="newAsset.length = 3">
+                <option v-for="(n,j) in assetData.names" :value="j">{{n}}</option>
+              </select>
+              <select class="custom-select" v-model="mod">
+                <option v-for="u in assetData.tags[newAsset[0]]" :value="u.i">{{u.name}}</option>
+              </select>
+              <div class="input-group-append">
+                <button class="btn btn-success" type="button" @click="newAsset.push(mod)">+Mod</button>
+              </div>
+            </div>
+            <div v-if="mods.length>0" style="font-size:small;">
+              <span class="font-weight-bold">Mods:</span>
+              <div class="btn-group btn-group-sm mx-1" role="group" v-for="(m,i) in mods">
+                <button type="button" class="btn btn-light">{{m}}</button>
+                <button type="button" class="btn btn-warning font-weight-bold" @click="newAsset.splice(3+i,1)">&#10008;</button>
+              </div>
+            </div>
+          </div>
+          <!--Asset List---------------------------------------------->
+          <div class="border p-1" v-for="(a,i) in hero.assetText">
+            <div class="d-flex justify-content-between align-items-center">
+              <div class="font-weight-bold">{{a.name}}</div>
+              <div class="btn-group btn-group-sm" role="group">
+                <button class="btn btn-success" type="button" @click="editItem(hero.asset[i],'asset')" v-if="hero.asset[i]>=0">&#9998;</button>
+                <button class="btn btn-warning" type="button" @click="hero.asset.splice(i,1)">&#10008;</button>
+              </div>
+            </div>
+            <div style="font-size:small;" v-html="a.text" align="left"></div>
+          </div>
+        </div>
+      </div>
+    </template>
+    <!--END HEROES---------------------------------------------->
+    <!--PARTY TEMPLATE---------------------------------------------->
+    <template id="component-party">
+      <div>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <button class="btn btn-info btn-block" type="button" @click="close()">Close</button>
+            <button class="btn btn-success" type="button" @click="add()">New</button>
+          </div>
+          <select class="custom-select" v-model="pid">
+            <option v-for="(p,i) in partyNames" :value="i+1">{{p}}</option>
+          </select>
+        </div>
+        <h5 class="mt-1">
+          <input class="form-control" type="text" placeholder="Party Name" v-model="party.name">
+        </h5>
+        <!--Aspects---------------------------------------------->
+        <div class="h-double-border">
+          <h5 class="m-0 d-flex justify-content-center align-items-center">
+            <span>Aspects</span>
+            <button type="button" class="ml-2 btn btn-success btn-sm" @click="party.aspects.push('')">New</button>
+          </h5>
+          <div class="font-sm font-weight-bold">Reputation - Contacts - Bonds - Claims</div>
+        </div>
+        <div class="input-group" v-for="(a,i) in party.aspects">
+          <input class="form-control" type="text" placeholder="Aspect Information" v-model="party.aspects[i]">
+          <div class="input-group-append" v-if="i>0">
+            <button class="btn btn-warning" type="button" @click="party.aspects.splice(i,1)">&#10008;</button>
+          </div>
+        </div>
+        <!--Heroes---------------------------------------------->
+        <h5 class="h-double-border mt-1 d-flex justify-content-center align-items-center">
+          <span>Heroes</span>
+        </h5>
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Hero</span>
+          </div>
+          <select class="custom-select" v-model="hid">
+            <option v-for="n in allHeroes" :value="n.id">{{n.name}}</option>
+          </select>
+          <div class="input-group-append">
+            <button class="btn btn-success" type="button" @click="addHero()">Add</button>
+          </div>
+        </div>
+        <div class="d-flex justify-content-center m-1" style="font-size:small;" v-for="(h,i) in heroes">
+          <div class="btn-group btn-group-sm" role="group">
+            <button class="btn btn-light" type="button">{{h.name}}</button>
+            <button class="btn btn-danger" type="button" @click="removeHero(h)">&#10008;</button>
+          </div>
+        </div>
+        <h6>@{{party.locationData.name}}</h6>
+        <!--Extra---------------------------------------------->
+        <div class="h-double-border">
+          <h5 class="m-0 d-flex justify-content-center align-items-center">
+            <span>Extras</span>
+            <div class="btn-group btn-group-sm ml-2" role="group">
+              <button type="button" class="btn btn-success" @click="addExtra()">New</button>
+              <button type="button" class="btn btn-info" @click="toLoad='extras',loadId=0">Add</button>
+            </div>
+          </h5>
+          <div class="font-sm font-weight-bold">Special Abilities - Upgrades - Claims/Bonds</div>
+        </div>
+        <!--New Extra---------------------------------------------->
+        <div class="p-1 m-1" v-if="newExtra">
+          <div class="input-group">
+            <input class="form-control" type="text" placeholder="Extra Name" v-model="newExtra.n">
+            <input class="form-control" type="text" placeholder="Playbook" v-model="newExtra.b">
+            <select class="custom-select" v-model="newExtra.w">
+              <option v-for="(w,i) in extraTypes" :value="i">{{w}}</option>
+            </select>
+            <div class="input-group-append">
+              <button class="btn btn-success" type="button" @click="saveExtra()">&#10004;</button>
+              <button class="btn btn-warning" type="button" @click="newExtra=null">&#10008;</button>
+            </div>
+          </div>
+          <textarea class="form-control" placeholder="Extra info in HTML/text" v-model="newExtra.t"></textarea>
+        </div>
+        <!--Load Extra---------------------------------------------->
+        <div class="p-1 m-1" v-if="toLoad=='extras'">
+          <div class="input-group">
+            <select class="custom-select" v-model="loadId">
+              <option v-for="(a,i) in allExtras" :value="i">{{a.b}}, {{extraTypes[a.w]}} - {{a.n}}</option>
+            </select>
+            <div class="input-group-append">
+              <button class="btn btn-success" type="button" @click="loadExtra()">Add</button>
+              <button class="btn btn-warning" type="button" @click="toLoad=''">&#10008;</button>
+            </div>
+          </div>
+          <div v-html="allExtras[loadId].t" align="left"></div>
+        </div>
+        <!--Extra List---------------------------------------------->
+        <div class="border p-1" v-for="(a,i) in party.extraText">
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="font-weight-bold">{{a.name}}</div>
+            <div class="btn-group btn-group-sm" role="group">
+              <button class="btn btn-warning" type="button" @click="party.abilities.splice(i,1)">&#10008;</button>
+            </div>
+          </div>
+          <div style="font-size:small;" v-html="a.text" align="left"></div>
+        </div>
+        <!--Challenges---------------------------------------------->
+        <div class="h-double-border">
+          <h5 class="mt-1 mb-0 d-flex justify-content-center align-items-center">
+            <span>Challenges</span>
+            <div class="btn-group btn-group-sm ml-2" role="group">
+              <button type="button" class="btn btn-success" @click="addChallenge()">New</button>
+              <button type="button" class="btn btn-info" @click="showAllC=!showAllC">{{showAllC ? 'All' : 'Inclomplete'}}</button>
+            </div>
+          </h5>
+          <div class="font-sm font-weight-bold">Fights - Negotiations - Chases - Labors</div>
+        </div>
+        <div class="p-1">
+          <button type="button" class="btn btn-sm" :class="[c.complete ? 'btn-light' : 'btn-warning']" v-for="c in challenges" @click="loadChallenge(c)">{{c.name}}</button>
+        </div>
+      </div>
+    </template>
+    <!--END PARTY TEMPLATE---------------------------------------------->
+    <!--PARTY INFO @ Location ---------------------------------------------->
+    <template id="party-data">
+      <div v-cloak>
+        <div class="my-1">
+          <button class="btn btn-warning btn-sm mx-1" type="button" v-for="c in party.activeChallenges" @click="loadChallenge(c)">{{c.name}}</button>
+        </div>
+        <div class="input-group" v-if="party.children.length>0">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Action</span>
+          </div>
+          <select class="custom-select" v-model="mid" @change="loadMove()">
+            <option v-for="(m,i) in moves" :value="m.id">{{m.title}}</option>
+          </select>
+          <div class="input-group-append"></div>
+        </div>
+        <component v-bind:is="'situation-'+mid" class="p-1" v-if="mid!=''"></component>
+        <explore v-if="action == 'explore'" :party="party"></explore>
+      </div>
+    </template>
+    <!--END PARTY INFO @ Location ---------------------------------------------->
+    <!--CHALLENGE TEMPLATE---------------------------------------------->
+    <template id="challenge">
+      <div v-if="cid!=''">
+        <div class="input-group">
+          <input class="form-control" type="text" v-model="challenge.name">
+          <div class="input-group-append">
+            <button class="btn btn-info" type="button" @click="close()">Close</button>
+          </div>
+        </div>
+        <textarea class="form-control" placeholder="Information about the Challenge" v-model="challenge.text"></textarea>
+        <button class="btn btn-block my-1" :class="[challenge.complete ? 'btn-success' : 'btn-warning']" type="button" @click="challenge.complete = !challenge.complete">{{challenge.complete ? "Completed" : "Not Complete"}}</button>
+        <div class="p-2">
+          <button class="btn btn-info" type="button font-weight-bold" data-toggle="collapse" data-target="#about-journey">Journey</button>
+          <button class="btn btn-info" type="button font-weight-bold" data-toggle="collapse" data-target="#about-payPrice">Pay the Price</button>
+          <div id="accordion-about" align="left">
+            <div id="about-journey" class="collapse border p-1" data-parent="#accordion-about">
+              <move-journey class="border p-1"></move-journey>
+              <move-journey-between-shards class="border p-1"></move-journey-between-shards>
+              <move-resupply class="border p-1"></move-resupply>
+              <move-make-camp class="border p-1"></move-make-camp>
+              <move-reach-destination class="border p-1"></move-reach-destination>
+            </div>
+            <div id="about-payPrice" class="collapse border p-1" data-parent="#accordion-about">
+              <move-pay-the-price></move-pay-the-price>
+            </div>
+          </div>
+        </div>
+        <!--Party Info---------------------------------------------->
+        <div class="my-1">
+          <button class="btn btn-light btn-block border m-0" type="button" data-toggle="collapse" href="#partyInfo">
+            <h5>{{challenge.party.name}}</h5>
+          </button>
+          <div id="partyInfo" class="collapse font-sm">{{challenge.party.aspects.join(' ')}}</div>
+          <div class="btn-toolbar justify-content-between" role="toolbar" v-for="(h,i) in challenge.heroes">
+            <div class="btn-group" role="group">
+              <button type="button" class="btn btn-light">{{h.name}}</button>
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Stat Roll</button>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" href="#" v-for="(s,i) in h.statText" @click="rollStat(h,i)">{{s}}</a>
+                </div>
+              </div>
+            </div>
+            <div class="btn-group" role="group">
+              <button type="button" class="btn btn-light">{{h.fp}} E</button>
+              <button class="btn btn-warning" type="button" @click="h.fp--" :disabled="h.fp==0">-</button>
+              <button class="btn btn-success" type="button" @click="h.fp++">+</button>
+            </div>
+            <div class="btn-group" role="group">
+              <button type="button" class="btn btn-light">HP {{stress[i]}}/{{h.stress[0]}}</button>
+              <button class="btn btn-warning" type="button" @click="setStress(h,-1)" :disabled="stress[i]==0">-</button>
+              <button class="btn btn-success" type="button" @click="setStress(h,1)" :disabled="stress[i]==h.stress[0]">+</button>
+            </div>
+            <div class="btn-group" role="group">
+              <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">Damage Roll</button>
+              <div class="dropdown-menu">
+                <a class="dropdown-item" href="#" v-for="d in dmg" @click="rollDMG(h,d)">{{d}}</a>
+              </div>
+            </div>
+          </div>
+          <!--Hero Info---------------------------------------------->
+          <div v-if="hero">
+            <div class="font-sm">
+              <div>{{hero.name}}. {{hero.aspects.join(' ')}}</div>
+              <div>
+                <span class="mx-2" v-for="b in hero.skillTree">{{b[0]>=0?'+':''}}{{b[0]}}: {{b.slice(1).join(', ')}}</span>
+              </div>
+              <div>
+                <span class="mx-1" v-for="s in hero.stuntText">{{s[1]}}. {{s[2]}}</span>
+              </div>
+              <div>
+                <span class="mx-1" v-for="a in hero.assetText">{{a.name}}. {{a.text}}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!--Aspects---------------------------------------------->
+        <div class="my-1 h-double-border">
+          <h5 class="m-0 d-flex justify-content-center align-items-center">
+            <span>Aspects</span>
+            <button type="button" class="ml-2 btn btn-success btn-sm" @click="challenge.aspects.push('')">New</button>
+          </h5>
+          <div class="font-sm font-weight-bold">Themes - Obstacles - Features - Inhabitants</div>
+        </div>
+        <div class="input-group" v-for="(a,i) in challenge.aspects">
+          <input class="form-control" type="text" placeholder="Aspect Information" v-model="a">
+          <div class="input-group-append">
+            <button class="btn btn-warning" type="button" @click="challenge.aspects.splice(i,1)">&#10008;</button>
+          </div>
+        </div>
+        <!--PROGRESS---------------------------------------------->
+        <h5 class="h-double-border mt-1" align="center">
+          <span>Progress Tracks</span>
+          <button class="btn btn-success btn-sm ml-2" type="button" @click="addTrack()">New</button>
+          <div class="font-sm font-weight-bold">Journey - Delve - Negotiation - Test</div>
+        </h5>
+        <progress-track class="p-1 border" v-for="(t,i) in challenge.tracks" :i="i" :all="challenge.tracks"></progress-track>
+        <!--FOES---------------------------------------------->
+        <h5 class="h-double-border mt-1 d-flex justify-content-center align-items-center">
+          <span>Foes</span>
+          <div class="btn-group btn-group-sm ml-2" role="group">
+            <button type="button" class="btn btn-success" @click="addFreeform()">+Freeform</button>
+            <button type="button" class="btn btn-info" @click="loadOpId=1">Load</button>
+          </div>
+        </h5>
+        <!--Load Opponent---------------------------------------------->
+        <div class="p-1 m-1" v-if="loadOpId>0">
+          <div class="input-group">
+            <select class="custom-select" v-model="loadOpId">
+              <option v-for="(n,i) in oNames" :value="i+1">{{n}}</option>
+            </select>
+            <div class="input-group-append">
+              <button class="btn btn-success" type="button" @click="loadOpponent()">Add</button>
+              <button class="btn btn-warning" type="button" @click="loadOpId=0">&#10008;</button>
+            </div>
+          </div>
+        </div>
+        <!--Foe List---------------------------------------------->
+        <foe-data class="p-1 border" v-for="(f,i) in challenge.foes" :i="i" :all="challenge.foes" :log="challenge.log"></foe-data>
+        <!--Rolling---------------------------------------------->
+        <make-a-roll b="0" vs="0" :log="challenge.log"></make-a-roll>
+        <!--LOG---------------------------------------------->
+        <h6 class="h-double-border mt-1" align="center">
+          <span>Log</span>
+          <button class="btn btn-success btn-sm ml-2" type="button" @click="challenge.log.push('New Log')">New</button>
+        </h6>
+        <log-list v-for="(l,i) in challenge.log" :all="challenge.log" :i="i"></log-list>
+      </div>
+    </template>
+    <!--END CHALLENGE TEMPLATE---------------------------------------------->
+    <!--SECTOR LIST---------------------------------------------->
+    <template id="sector-list">
+      <div align="left">
+        <div class="border" v-for="S in sectors">
+          <button class="btn btn-light btn-block border" type="button" style="overflow:hidden;" data-toggle="collapse" :href="'#zone-'+S.id">
+            <h5 class="m-0" align="left">{{S.name}}</h5>
+          </button>
+          <div :id="'zone-'+S.id" class="border collapse" :class="[S.id=='outl' ? 'show' : '']">
+            <div class="border p-1" v-for="R in S.children">
+              <div class="p-1 rounded bg-light border border-light w-100 d-flex justify-content-between align-items-center" style="overflow:hidden;">
+                <h5 class="m-0 w-100" align="left" data-toggle="collapse" :href="'#zone-'+R.id">{{R.name}}</h5>
+                <button type="button" class="btn btn-success btn-sm" @click="addShard(R)">Add Shard</button>
+              </div>
+              <div>{{R.info}}</div>
+              <div :id="'zone-'+R.id" class="border collapse">
+                <div class="border p-1" v-for="Z in R.children">
+                  <button class="btn btn-light btn-block border" type="button" style="overflow:hidden;" data-toggle="collapse" :href="'#zone-'+Z.id">
+                    <h5 class="m-0 d-flex justify-content-between">
+                      <div>{{Z.name}}</div>
+                      <div>{{Z.tt}}</div>
+                    </h5>
+                  </button>
+                  <zone-data :id="'zone-'+Z.id" class="collapse m-1 p-1" :zone="Z"></zone-data>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </template>
+    <!--END SECTOR LIST---------------------------------------------->
+    <!--ZONE DATA---------------------------------------------->
+    <template id="zone-data">
+      <div>
+        <input class="form-control" type="text" v-model="zone.name" v-if="!zone.isCore">
+        <div>{{zone.info}}</div>
+        <!--Stats---------------------------------------------->
+        <div align="center">
+          <div align="d-flex flex-wrap">
+            <div class="btn-group btn-group-sm" role="group" v-for="n in 3">
+              <button type="button" class="btn btn-light">{{["Population","Advancement","Danger"][n-1]}} {{stats[n-1]}}</button>
+              <button type="button" class="btn btn-secondary" @click="setStat(n-1,1)">+</button>
+              <button type="button" class="btn btn-secondary" @click="setStat(n-1,-1)">-</button>
+            </div>
+          </div>
+        </div>
+        <!--Aspects---------------------------------------------->
+        <div class="h-double-border" align="center">
+          <h5 class="m-0">
+            <span>Aspects</span>
+            <button class="btn btn-success btn-sm ml-2" type="button" @click="zone.aspects.push(''),aspects=zone.aspects.slice()">New</button>
+          </h5>
+          <div class="font-sm font-weight-bold">People - Landmarks - Local Items</div>
+        </div>
+        <!--Terrain---------------------------------------------->
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text bg-info text-white" style="width:80px;">Terrain</span>
+          </div>
+          <input class="form-control" type="text" v-model="zone.terrainText" disabled>
+        </div>
+        <!--Areas---------------------------------------------->
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text bg-info text-white" style="width:80px;">Anchor</span>
+          </div>
+          <input class="form-control" type="text" v-model="zone.anchorText" disabled>
+        </div>
+        <!--Needs / Trouble---------------------------------------------->
+        <div class="input-group" v-for="(a,i) in aspects">
+          <div class="input-group-append" v-if="i < 2">
+            <button class="btn btn-info" type="button" @click="genAspect(i)">&#x21ba;{{aTitles[i]}}</button>
+          </div>
+          <input class="form-control" type="text" placeholder="Aspect Information" v-model="zone.aspects[i]">
+          <div class="input-group-append">
+            <button class="btn btn-warning" type="button" @click="zone.aspects.splice(i,1),aspects=zone.aspects.slice()" v-if="i>1">&#10008;</button>
+          </div>
+        </div>
+        <!--Ways---------------------------------------------->
+        <div class="my-1 h-double-border" align="center">
+          <h5 class="m-0">
+            <span>Ways</span>
+          </h5>
+        </div>
+        <div align="center">
+          <div align="d-flex flex-wrap">
+            <div class="btn-group btn-group-sm" role="group" v-for="(w,i) in zone.ways">
+              <button type="button" class="btn btn-light">{{w.name}}</button>
+              <button type="button" class="btn btn-warning" v-if="w.jid>-1" @click="removeWay(w)">&#10008;</button>
+            </div>
+          </div>
+        </div>
+        <div class="input-group">
+          <select class="custom-select" v-model="newWay">
+            <option v-for="p in allPlaces" :value="p">{{p.parent.name}} - {{p.name}}</option>
+          </select>
+          <div class="input-group-append">
+            <button class="btn btn-success" @click="addWay()">Add</button>
+          </div>
+        </div>
+        <!--LOG---------------------------------------------->
+        <h5 class="h-double-border mt-1" align="center">
+          <span>Log</span>
+          <button class="btn btn-success btn-sm ml-2" type="button" @click="zone.log.push('New Log'),log=zone.log.slice()">New</button>
+        </h5>
+        <div class="input-group" v-for="(l,i) in log">
+          <input class="form-control" type="text" placeholder="Log text" v-model="zone.log[i]">
+          <div class="input-group-append">
+            <button class="btn btn-warning" type="button" @click="zone.log.splice(i,1),log=zone.log.slice()">&#10008;</button>
+          </div>
+        </div>
+        <button class="btn btn-info btn-block" type="button" @click="explore()">Explore</button>
+      </div>
+    </template>
+    <!--END ZONE DATA---------------------------------------------->
+    <!--FACTION TEMPLATE---------------------------------------------->
+    <template id="factions">
+      <div align="left">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <button class="btn btn-info" type="button" @click="close()">Close</button>
+            <button class="btn btn-success" type="button" @click="add()">New</button>
+          </div>
+          <select class="custom-select" v-model="fid">
+            <option v-for="F in factions" :value="F.id">{{F.name}}</option>
+          </select>
+          <div class="input-group-append">
+            <button class="btn" :class="[!showOnly ? 'btn-info' : 'btn-success']" type="button" @click="showOnly= !showOnly" v-if="fid!=''">{{showOnly ? 'Show All' : 'Show Only'}}</button>
+          </div>
+        </div>
+        <div class="border p-1" v-for="F in factions" v-if="!showOnly || fid==F.id">
+          <button class="btn btn-light btn-block border" type="button" style="overflow:hidden;" @click="showId == F.id ? showId=-1 : showId = F.id">
+            <h5 class="m-0" align="left">{{F.name}}</h5>
+          </button>
+          <div class="px-2" align="left" style="overflow-wrap:break-word;">{{F.text}}</div>
+          <faction-data :F="F" v-if="showId == F.id"></faction-data>
+        </div>
+      </div>
+    </template>
+    <!--Faction Data---------------------------------------------->
+    <template id="faction-data">
+      <div class="my-1 p-1 border border-secondary">
+        <input class="form-control" type="text" v-model="F.name" v-if="F.isPlayer">
+        <textarea class="form-control" placeholder="About the Faction" v-model="F.text" v-if="F.isPlayer"></textarea>
+        <div class="m-1 p-2" :id="'f-'+F.id">
+          <div align="center">
+            <div class="btn-group mr-2" role="group" v-for="(n,i) in ['Might','Expertise','Cunning']">
+              <button type="button" class="btn btn-light" @click="roll(i)">{{n}} {{stats[i]}}</button>
+              <button type="button" class="btn btn-secondary" @click="setStat(i,1)" :disabled="stats[i]==5">+</button>
+              <button type="button" class="btn btn-secondary" @click="setStat(i,-1)" :disabled="stats[i]==0">-</button>
+            </div>
+          </div>
+          <!--Aspects---------------------------------------------->
+          <h6 class="h-double-border mt-1" align="center">
+            <span>Aspects</span>
+            <button class="btn btn-info btn-sm ml-2" type="button" @click="F.aspects.push(''),nA++">Add</button>
+          </h6>
+          <div class="input-group" v-for="i in nA">
+            <input class="form-control" type="text" placeholder="Aspect Information" v-model="F.aspects[i-1]">
+            <div class="input-group-append">
+              <button class="btn btn-warning" type="button" @click="nA--,F.aspects.splice(i-1,1)">&#10008;</button>
+            </div>
+          </div>
+          <!--Plots---------------------------------------------->
+          <h6 class="h-double-border mt-1" align="center">
+            <span>Plots</span>
+            <button class="btn btn-info btn-sm ml-2" type="button" @click="addPlot()">Add</button>
+          </h6>
+          <progress-track class="p-1 border" v-for="(p,i) in F.plots" :i="i" :all="F.plots" :log="F.log"></progress-track>
+          <!--Assets---------------------------------------------->
+          <h6 class="h-double-border mt-1" align="center">
+            <span>Assets</span>
+            <button class="btn btn-info btn-sm ml-2" type="button" @click="F.assets.push(['','',''])">Add</button>
+          </h6>
+          <div v-for="(a,i) in F.assets">
+            <div class="input-group">
+              <input class="form-control" type="text" placeholder="Name" v-model="a[1]">
+              <select class="custom-select" v-model="a[0]">
+                <option v-for="S in allShards" :value="S.id">{{S.parent.name}} - {{S.name}}</option>
+              </select>
+              <button class="btn btn-warning btn-sm" type="button" @click="F.assets.splice(i,1)">&#10008;</button>
+            </div>
+            <input class="form-control" type="text" placeholder="Information" v-model="a[2]">
+          </div>
+          <!--Forces---------------------------------------------->
+          <h6 class="h-double-border mt-1" align="center">
+            <span>Forces</span>
+            <button class="btn btn-info btn-sm ml-2" type="button" @click="addForce()">Add</button>
+          </h6>
+          <!--New Force---------------------------------------------->
+          <force-create :tmp="newForce" v-if="newForce"></force-create>
+          <!--Force List---------------------------------------------->
+          <div class="m-1 p-1 border" v-for="(f,i) in F.forces">
+            <div class="d-flex justify-content-between m-0 p-0">
+              <div>
+                <strong>{{f.name}}. </strong>
+                <span>{{f.text}}</span>
+              </div>
+              <div>
+                <button class="btn btn-success btn-sm" type="button" @click="newForce=f">&#9998;</button>
+                <button class="btn btn-warning btn-sm" type="button" @click="F.forces.splice(i,1)">&#10008;</button>
+              </div>
+            </div>
+            <div v-html="forceTags[i]" class="font-sm pl-2"></div>
+          </div>
+          <!--LOG---------------------------------------------->
+          <h6 class="h-double-border mt-1" align="center">
+            <span>Log</span>
+            <button class="btn btn-info btn-sm ml-2" type="button" @click="F.log.push('New Log')">Add</button>
+          </h6>
+          <log-list v-for="(l,i) in F.log" :all="F.log" :i="i"></log-list>
+        </div>
+      </div>
+    </template>
+    <!--END FACTION TEMPLATE---------------------------------------------->
+    <!--FORCE TEMPLATE---------------------------------------------->
+    <template id="force-create">
+      <div class="p-1 m-1 border" v-if="tmp">
+        <div class="input-group">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Name</span>
+          </div>
+          <input class="form-control" type="text" v-model="name">
+          <div class="input-group-append">
+            <button class="btn btn-info" type="button" @click="generate()">&#x21ba;</button>
+            <button class="btn btn-success" type="button" @click="save()">&#10004;</button>
+            <button class="btn btn-warning" type="button" @click="close()">&#10008;</button>
+          </div>
+        </div>
+        <div class="input-group" v-if="!tmp.fid">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Faction</span>
+          </div>
+          <select class="custom-select" v-model="fid">
+            <option v-for="F in allFactions" :value="F.id">{{F.name}}</option>
+          </select>
+        </div>
+        <input class="form-control" type="text" placeholder="HP; Armor; Damage; Moves" v-model="text">
+        <div class="d-flex">
+          <div class="input-group">
+            <select class="custom-select" v-model="newTag">
+              <option v-for="(t,i) in forceTags" :value="i">{{t[0]}}</option>
+            </select>
+            <div class="input-group-append">
+              <button class="btn btn-success" type="button" @click="tags.push(newTag)">+Tag</button>
+            </div>
+          </div>
+          <div class="btn-group btn-group-sm ml-1" role="group" v-for="(t,i) in tagText">
+            <button type="button" class="btn btn-light">{{t}}</button>
+            <button type="button" class="btn btn-warning font-weight-bold" @click="tags.splice(i,1)">&#10008;</button>
+          </div>
+        </div>
+        <div class="font-sm" v-html="selectedTag"></div>
+      </div>
+    </template>
+    <!--END FORCE TEMPLATE---------------------------------------------->
+  </body>
+  <script src="src/nameGenerate.js"></script>
+  <script src="lib/ethers-v4.min.js"></script>
+  <script src="lib/d3.v5.min.js"></script>
+  <script src="lib/vue.2.5.16.min.js"></script>
+  <script src="lib/noty.3.1.4.min.js"></script>
+  <script src="lib/popper.1.12.3.min.js"></script>
+  <script src="lib/jquery-3.3.1.min.js"></script>
+  <script src="lib/bootstrap.min.js"></script>
+  <script type="module" src="src/outlands/main.js"></script>
+</html>
