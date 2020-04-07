@@ -134,6 +134,15 @@
   line-height: 1em;
 }
 
+.abilities.abilities-frame > div {
+  display: inline-block;
+  vertical-align: middle;
+  width: 24.5%;
+  min-width: 40px;
+  font-size: 12px;
+  line-height: 1em;
+}
+
 .abilities h4 {
   margin: 10px 0 2px;
   font-size: 14px;
@@ -153,6 +162,11 @@
   line-height: 1.2em;
   display: inline;
   margin: 0;
+}
+
+.property-block ul {
+  font-size: 13.5px;
+  line-height: 1.2em;
 }
 
 .property-block h4 {

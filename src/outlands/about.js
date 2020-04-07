@@ -1,57 +1,19 @@
-import * as powerData from "../powers-data.js"
 import {tables} from "./generatorTables.js"
 import {data as settingData} from "./shards-core.js"
 import * as shardData from "./shards-data.js"
 import {regionGen} from "./region-gen.js"
-import {data as coreFactions} from "./factions-core.js"
+import {UI as factionsUI} from "./factions-UI.js"
 import * as frontsData from "../fronts-data.js"
-import * as forceData from "./forces-data.js"
+import * as GEAR from "./gear.js"
 
-const SKILLS = [
-  ['Athletics',`Your character’s general level of physical fitness, whether through training, natural gifts, or genre-specific means (like magic or genetic alteration).`],
-  ['Burglary',`Your character’s aptitude for stealing things and getting into places that are off-limits.`],
-  ['Craft',`This covers artistic ability, working with basic machinery and physical tools.`],
-  ['Deceive',`Deceive is the skill about lying to and misdirecting people.`],
-  ['Empathy',`Empathy involves knowing and being able to spot changes in a person’s mood or bearing.`],
-  ['Fight',`This skill covers all forms of close-quarters combat (in other words, within the same zone), both unarmed and using weapons.`],
-  ['Influence',`Your character's ability to get others to agree with their point of view.`],
-  ['Investigate',`This skill revolves around concentrated effort and in-depth scrutiny. Your character uses this to find things out.`],
-  ['Lore',`This covers knowledge of history, people, places and things.`],
-  ['Notice',`This representing a character’s overall perception, ability to pick out details at a glance, and other powers of observation.`],
-  ['Physique',`This represents the character’s natural physical aptitudes, such as raw strength and endurance.`],
-  ['Pilot',`This covers operating vehicles, mecha, spaceships, etc.`],
-  ['Rapport',`This represents how well your character gets along with others.`],
-  ['Science',`This covers knowledge of scientific study like chemistry, physics, medicine, biology, etc.`],
-  ['Shoot',`The skill of using ranged weaponry, either in a conflict or on targets that don’t actively resist your attempts to shoot them.`],
-  ['Stealth',`This skill allows your character to avoid detection, both when hiding in place and trying to move about unseen.`],
-  ['Survival',`The knowledge and ability to stay alive in all maner of hostile environments.`],
-  ['Tactics',`The ability to plan and execute a strategy - for games and battle.`],
-  ['Tech',`Your characters knowledge of and ability to craft and manipulate technology. This covers coding as well as complex/high-tech systems.`],
-  ['Will',`Your character’s general level of mental fortitude, the same way that Physique represents your physical fortitude.`],
+const COSMICHUES = [
+  ["Red","Ruby","Charisma, Evocation, Fire, Light"],
+  ["Orange","Citrine","Dexterity, Illusion,Summoning, Air, Storm"],
+  ["Yellow","Topaz","Strength, Abjuration, Enchantment, Earth"],
+  ["Green","Emerald","Constitution, Transmutation, Life, Plants"],
+  ["Blue","Sapphire","Intelligence, Divination, Water, Ice"],
+  ["Violet",'Amethyst',"Wisdom, Necromancy, Death, Shadow"]
 ]
-const ABILITIES = [
-  { "name" : "Analyze",
-    "text" : `covers your character's ability with history, science, technology, engineering and tinkering.`,
-    "skills" : "Craft, Investigate, Lore, Pilot, Science, Tech"
-  },
-  { "name" :"Explore",
-    "text" : `measures your character's physical capabilities like strength, stamina, and agility. It also covers their knowledge and ability to survive in harsh conditions.`,
-    "skills" : "Athletics, Craft, Notice, Physique, Survival, Will"
-  },
-  { "name" :"Influence",
-    "text" : `covers how well your character can read, interact with, and convince others.`,
-    "skills" : "Deceive, Empathy, Influence, Lore, Rapport, Will"
-  },
-  { "name" : "Fight",
-    "text" : `covers your hero’s skill in combat - in close and at range.`,
-    "skills" : "Athletics, Fight, Notice, Physique, Shoot, Tactics"
-  },
-  { "name" : "Sneak",
-    "text" : `measures their ability to get in and out of places unnoticed, even if they aren't invited.`,
-    "skills" : "Athletics, Burglary, Deceive, Notice, Pilot, Stealth"
-  }
-]
-const ENERGYPOINTS = [9,10,12,13,14,15,17,18,19,20]
 
 const about = `
 <div class="m-1 p-2" align="left">
@@ -84,7 +46,7 @@ const about = `
     many of its concepts and mechanics from other sources. </p>
     <ul><strong>
         <li>Concept: <em>Planesecape</em></li>
-        <li>Core Rules: <em>D&D 5E</em></li>
+        <li>Core Rules: <em>OSR</em></li>
         <li>Pointcrawl: <em>Downcrawl</em></li>
         <li>Generators of all kinds: <em>The Perilous Wilds</em> </li>
         <li>Fronts / Plots: <em>Dungeon World</em> </li>
@@ -102,7 +64,7 @@ const about = `
         <p>The name Outlands Hack and all layout is copyright ©2019 Nathan Ellsworth.</p>
         <p>Many of entries in the generation tables come from <em>The Perilous Wilds</em> by Jason Lutes and Jeremy Strandberg, licensed under a Creative Commons Attribution-ShareAlike 3.0 Unported license.</p>
         <p>The fronts used in the factions and their plots come from <em>Dungeon World</em> by Sage LaTorra and Adam Koebel and licensed under the Creative Commons Attribution 3.0 Unported License.</p>
-        <p>The text of <em>Outlands Hack</em> is released under a Creative Commons Attribution-ShareAlike 3.0 Unported license.</p>
+        <p>The text of the <em>Outlands</em> website is released under a Creative Commons Attribution-ShareAlike 3.0 Unported license.</p>
         <button type="button" class="btn btn-block btn-info" data-toggle="collapse" data-target="#ogl" >OGL</button>
         <div id="ogl" class="collapse" style="font-size:x-small;">
             DESIGNATION OF PRODUCT IDENTITY
@@ -209,7 +171,7 @@ const outlands = `
     <h3>Shards</h3>
     <p>Shards are the islands of stability within the flux of the Outland’s 
     shifting geography. Its terrain is influenced by the shard’s region, but 
-    within a shard is dominated by a specific anchor, be it cultural, 
+    within it is dominated by a specific anchor, be it cultural, 
     geographical, or biological. An anchor may be a single city, a misty valley, 
     a million branching labyrinth-like chasm, the skeleton of a dead titan, or 
     the forgotten factory of a forgotten cosmic civilization. Outside this a 
@@ -223,7 +185,7 @@ const outlands = `
     A claim does not mean other factions can’t be found in the shard, but they 
     don’t have a strong enough base to make it theirs. </p>
     <h3>Encounters</h3>
-    <p>When in need of an encounter, either on a shard or when using a way each 
+    <p>When in need of an encounter, either on a shard or when using a way, each 
     region provides an encounter table. Simply roll 2d10 and consult the table. 
     Use the table even on undeveloped shards. Assume the result is there for 
     the same reason as the heroes - they are seeking/guarding what the heroes 
@@ -291,201 +253,13 @@ const rules = `
 <div class="m-1 p-1" align="left">
     <h2>Rules</h2>
 
-    <h3>Creating a Hero</h3>
-    <ol>
-      <li>Assign the following scores to your abilities: +2, +1, +1, +0, -1.</li>
-      <li>Select two skill specialties: one to represent your people, 
-      and the other for your background.</li>
-      <li>Select three powers.</li>
-      <li>You start with 8 HP and 9 EP.</li>
-      <li>Give yourself some basic gear.</li>
-    </ol>
-
-    <h3>Gaining Experience</h3>
-    <p>Your hero gains XP for the following events:</p>
-    <ul>
-      <li>Whenever you fail an ability roll gain 1 XP.</li>
-      <li>If you take damage during combat gain 1 XP (max of 1 per encounter).</li>
-    </ul>
     <p>
-      When you reach 20 XP, reset to 0 and you gain a new level. 
-      For every level your hero gains do the following:
+      For the most part this site just contains genertors and setting information. 
+      So, you could drop them into whatever game you are playing. 
+      However, when I talk about weapons/armor and when you get to the factions the 
+      monsters/forces stats are based upon generic OSR. I use ascending Armor Class and 
+      only one saving throw value.   
     </p>
-    <ol>
-      <li>Record your new level.</li>
-      <li>Add +4 HP to your total.</li>
-      <li>Add another skill specialty.</li>
-      <li>Add another power.</li>
-      <li>Increase your EP as <a href="#EPTable">outlined in the table</a>.</li>
-    </ol>
-
-    <button class="btn btn-light btn-block" type="button" data-toggle="collapse" data-target="#abilities">
-      <h3 class="m-0" align="left">Abilities</h3>
-    </button>
-    <div id="abilities" class="collapse p-1">
-      <p>Heroes have five abilities, that cover broad capabilities with a certain 
-      set of skills. An ability has a score between: -2 and +3.</p> 
-      <ul>
-        <li v-for="a in abilities"><bi>{{a.name}}</bi> {{a.text}} 
-          </br><bi>Skills:</bi> {{a.skills}}
-        </li>
-      </ul>
-
-      <h4 id="skills">Skills</h4>
-      <p>
-        There are 20 different skills that cover actions that your hero can perform.
-        There is intentional overlap between skills in an ability - the situation 
-        determines which ability applies.
-      </p>
-      <div class="container table-gen mb-2">
-        <div class="row table-gen">
-          <div class="col-2">Skill</div>
-          <div class="col">About</div>
-        </div>
-        <div v-for="s in skills" class="row table-gen">
-          <div class="col-2">{{s[0]}}</div>
-          <div class="col">{{s[1]}}</div>
-        </div>
-      </div>
-
-      <h4>Ability Roll</h4>
-      <p>
-        When a roll is called for, roll 2d6 and add the appropriate ability score.
-        You should also determine the most aplicable skill, and if any tags apply. A result of 7+ means that you have succeeded. 
-        <ul><bi>
-          <li>Make rolls matter.</li>
-          <li>Don't roll unless failure will result in a serious consequence.</li>
-          <li>Bundle a series of simple checks into one.</li>
-          <li>Don't change the target number (7+).</li>
-          <ul>
-            <li>A standard roll represents heroic difficulty.</li></bi>
-            <li class="font-weight-bold">Add disadvantage(s) for increasing difficulty: epic <span class="dis dis-1"></span>, mythic <span class="dis dis-2"></span>, cosmic <span class="dis dis-3"></span>.</li>
-          </ul>
-        </ul>
-      </p>
-
-      <h4>Advantage <span class="adv adv-1"></span> / Disadvantage <span class="dis">❮</span></h4>
-      <p>
-        Sometimes you will have an advantage(s) <span class="adv adv-1"></span>, if you
-        do add 1d6 to the roll for every advantage and take the highest result from two dice.
-        However, if you have a disadvantage(s) <span class="dis">❮</span>, first cancel out any advantage(s). If you 
-        still have a disadvantage(s) add 1d6 to the roll for each and take the lowest 
-        result from two dice.  
-      </p>    
-      <h4>Strength / Weakness</h4>
-      <p>
-        Challenges may have a strength or weakness versus a certain tag. A strength means a
-        disadvantage when you roll, while a weakness grants an advantage.      
-      </p>
-
-    </div>
-
-    <button class="btn btn-light btn-block" type="button" data-toggle="collapse" data-target="#specialties">
-      <h3 class="m-0" align="left">Specialties</h3>
-    </button>
-    <div id="specialties" class="collapse px-1">
-      <p>
-        Every level you gain a specialty that reflects the experiences that your hero 
-        has gained. There are three different types of specialty:
-        <ul>
-          <li>Skill, gain <span class="adv adv-1"></span> with a chosen skill.</li>
-          <li>Skill vs Tag, gain <span class="adv adv-2"></span> with a chosen skill vs a tag.</li>
-          <li>Ability vs Tag, gain <span class="adv adv-1"></span> with a chosen ability vs a tag.</li>
-        </ul>
-      </p>
-    </div>
-
-    <button class="btn btn-light btn-block" type="button" data-toggle="collapse" data-target="#combat">
-      <h3 class="m-0" align="left">Combat</h3>
-    </button>
-    <div id="combat" class="collapse p-1">
-      <p>Combat is handled differenly than abilities. It is much more dynamic. 
-      <ul>
-        <li><bi>Attack roll, if you try to hit someone:</bi>
-        </br>Roll: d20 + Level + Combat + mods vs opponent's AC
-        </br>If your result is greater than the opponent's AC you do your damage. 
-        </li>
-        <li><bi>Defense roll, if someone tries to hit you:</bi>
-        </br>Roll: d20 + AC + Combat + mods vs opponent's Attack
-        </br>If your result is less than the opponent's attack you take damage. 
-        </li>
-      </ul>
-      </p>
-
-      <h4>Advantage / Disadvantage</h4>
-      <p>You can have an advantage/disadvantage in combat. You do not add more dice to the roll,
-      instead you gain a +/-4 modifier to the roll.</p>
-    </div>
-
-    <button class="btn btn-light btn-block" type="button" data-toggle="collapse" data-target="#powers">
-      <h3 class="m-0" align="left">Powers</h3>
-    </button>
-    <div id="powers" class="collapse p-1">
-      <p>
-        Powers represent the amazing things that heroes can often do. Some can seem 
-        very mundane, or represent the gadgets that they carry around. While others
-        are trully supernatural. 
-      </p>
-      <div class="p-1">
-        <h4>Power Roll</h4>
-        <p>Many power descriptions refer to a Power Roll. When called for roll 2d6
-        and add the rank of the power minus 1 (for a rank 1 power you would just roll 2d6). 
-        The power will detail what success and/or failure means. 
-        </p>
-      </div>
-      <div class="p-1">
-        <h4>Rank</h4>
-        <p>
-          All powers have a rank between 1 and 3. When you initially select a power, you
-          start at rank 1. The effects of increasing power depend on what the power does - 
-          usually increasing range, damage or defense. Each power description will 
-          list the increasing capability separated with a bar "|". 
-        </p><p>
-          Beginning PCs may not start with any rank 3 powers and may have no more
-          than one power at rank 2. As characters increase in level they may add
-          more super powers or improve existing ones to rank 2. Rank 3 powers are unavailable for 
-          heroes until they achieve 6th level.
-        </p>
-      </div>
-      <div class="p-1">
-        <h4>Features</h4>
-        <p>
-          Some powers are simply features – these are minor inexpensive
-          abilities. Three features count as one power. You may add +1 Energy Point in lieu of
-          taking a feature if you don't want to take three.
-        </p>
-      </div>
-      <div class="p-1">
-        <h4>Energy Points</h4>
-        <p>
-          Unless a power is permanent it costs a number of energy points to use. The cost 
-          will be listed after its type, and its type determines the frequency. Your hero's level determines the number of EP that they have.
-          If resting, the hero can regain 1 EP per hour. After a full night of rest a hero 
-          regains all their EP. 
-        </p>
-      </div>
-
-      <div id="EPTable" class="container table-gen">
-        <div class="row table-gen">
-          <div class="col-1"></div>
-          <div class="col" v-for="(p,i) in EP">{{i+1}}</div>
-        </div>
-        <div class="row table-gen">
-          <div class="col-1 font-weight-bold">EP</div>
-          <div class="col" v-for="p in EP">{{p}}</div>
-        </div>
-      </div>
-
-      <div class="p-1">
-        <h4>Power Types</h4>
-        <div v-for="t in powerTypes"><p><bi>{{t[0]}}</bi> {{t[1]}}</p></div>
-      </div>
-
-      <h4 id="features">Features</h4>
-      <power v-for="p in features" :p="p[1]" :name="p[0]"></power>
-      <h4>Powers</h4>
-      <power v-for="p in powers" :p="p[1]" :name="p[0]"></power>
-    </div>
 
     <button class="btn btn-light btn-block" type="button" data-toggle="collapse" data-target="#cosmic">
       <h3 class="m-0" align="left">Cosmic & Money</h3>
@@ -498,19 +272,20 @@ const rules = `
       <bi>cosmic</bi> is a widely accepted medium of exchange and a uniform store of value. 
       Any market and every port will expect the buyer to haggle and barter, but 
       underpinning the main trade some <bi>cosmic</bi> always changes hands. People 
-      carry small, half a pen, glass/quartz spindles imprinted with <bi>cosmic</bi> and 
-      thumb sized devices are used to transfer it between spindles. THe basic measure of
+      carry small, half a pen sized, glass/quartz spindles imprinted with <bi>cosmic</bi> and 
+      thumb sized devices are used to transfer it between spindles. The basic measure of
       cosmic is the <bi>Quint (Q)</bi>.</p>
 
       <p>Cosmic became this medium exchange because of its usefulness. 
       If cosmic is refined, Heroes can use it three direct ways:
       <ul>
-          <li><bi>Healing (1d4x200 Q):</bi> The hero regains 2d4+2 HP.</li>
+          <li><bi>Healing (1d4x200 Q):</bi> The hero regains 1d6+2 HP.</li>
           <li><bi>Fuel (1d6x10 Q):</bi> The hero does not need to eat for a Week.</li>
           <li><bi>Channel (1d6x100 Q):</bi> Roll the cosmic’s Usage Die and select one of the 
           following benefits:
               <ul>
-              <li>Add 1d6 to an Attribute Test </li>
+              <li>Add 1d6 to a saving throw</li>
+              <li>Add 1d6 to a skill test (if you use them)</li>
               <li>Add 1d6 to the hero’s Damage Roll </li> 
               <li>Reduce damage to the hero by 1d6</li>
               </ul>
@@ -527,43 +302,18 @@ const rules = `
       name, and tags of cosmic.</p>
 
       <div align="center"><h4>Cosmic Hues<h4></div>
-      <table class="mb-2" style="width:100%;">
-        <tr>
-          <th>Hue</th>
-          <th>Gem</th>
-          <th>Tags</th>
-        </tr>
-        <tr>
-          <td>Red</td>
-          <td>Ruby</td>
-          <td>Charisma, Evocation, Fire, Light</td>
-        </tr>
-        <tr>
-          <td>Orange</td>
-          <td>Citrine</td>
-          <td>Dexterity, Illusion,Summoning, Air, Storm</td>
-        </tr>
-        <tr>
-          <td>Yellow</td>
-          <td>Topaz</td>
-          <td>Strength, Abjuration, Enchantment, Earth</td>
-        </tr>
-        <tr>
-          <td>Green</td>
-          <td>Emerald</td>
-          <td>Constitution, Transmutation, Life, Plants</td>
-        </tr>
-        <tr>
-          <td>Blue</td>
-          <td>Sapphire</td>
-          <td>Intelligence, Divination, Water, Ice</td>
-        </tr>
-        <tr>
-          <td>Violet</td>
-          <td>Amethyst</td>
-          <td>Wisdom, Necromancy, Death, Shadow</td>
-        </tr>
-      </table>
+      <div class="container table-gen" >
+        <div class="row table-gen">
+          <div class="col-1">Hue</div>
+          <div class="col-1">Gem</div>
+          <div class="col">Tags</div>
+        </div>
+        <div v-for="h in hues" class="row table-gen">
+          <div class="col-1">{{h[0]}}</div>
+          <div class="col-1">{{h[1]}}</div>
+          <div class="col">{{h[2]}}</div>
+        </div>
+      </div>
     </div>
 
     <button class="btn btn-light btn-block" type="button" data-toggle="collapse" data-target="#gear">
@@ -572,11 +322,81 @@ const rules = `
     <div id="gear" class="collapse p-1">
       <h4 id="weapons">Weapons</h4>
       <p>Weapons are varied and dangerous. Pointy and sharp metal is standard across the Outlands, but 
-      technology has enabled an amazing variety of instruments of destruction. </p>
+      technology has enabled an amazing variety of instruments of destruction. Because of the variety it is easier
+      to group weapons by size classes, instead of listing individual weapons. When you want to vary the weapons,
+      give them a tag.        
+      </p>
+
+      <div align="center"><strong>Melee Weapons</strong></div>
+      <div class="container table-gen mb-2" >
+        <div class="row table-gen">
+          <div class="col-1">Class</div>
+          <div class="col-1">Damage</div>
+          <div class="col">Examples</div>
+        </div>
+        <div v-for="w in melee" class="row table-gen">
+          <div class="col-1">{{w[0]}}</div>
+          <div class="col-1">{{w[1]}}</div>
+          <div class="col">{{w[2].split(',').join(', ')}}</div>
+        </div>
+      </div>
+
+      <div align="center"><strong>Ranged Weapons</strong></div>
+      <div class="container table-gen mb-2" >
+        <div class="row table-gen">
+          <div class="col-1">Class</div>
+          <div class="col-1">Damage</div>
+          <div class="col">Examples</div>
+        </div>
+        <div v-for="w in ranged" class="row table-gen">
+          <div class="col-1">{{w[0]}}</div>
+          <div class="col-1">{{w[1]}}</div>
+          <div class="col">{{w[2].split(',').join(', ')}}</div>
+        </div>
+      </div>
+
+      <div align="center"><strong>Weapon Tags</strong></div>
+      <div class="container table-gen mb-2" >
+        <div class="row table-gen">
+          <div class="col-2">Tag</div>
+          <div class="col">About</div>
+        </div>
+        <div v-for="t in wTags" class="row table-gen">
+          <div class="col-2">{{t[0]}}</div>
+          <div class="col">{{t[1]}}</div>
+        </div>
+      </div>
 
       <h4 id="armor">Armor</h4>
       <p>Just like weapons, armor comes in many forms from thick metal plate to shimmering 
       screens of pure force.</p>
+
+      <div align="center"><strong>Basic Armor</strong></div>
+      <div class="container table-gen mb-2" >
+        <div class="row table-gen">
+          <div class="col-1">Class</div>
+          <div class="col-1">AC</div>
+          <div class="col">Tags</div>
+        </div>
+        <div v-for="a in armor" class="row table-gen">
+          <div class="col-1">{{a[0]}}</div>
+          <div class="col-1">{{a[1]}}</div>
+          <div class="col">{{a[2]}}</div>
+        </div>
+      </div>
+
+      <div align="center"><strong>Armor Tags</strong></div>
+      <div class="container table-gen mb-2" >
+        <div class="row table-gen">
+          <div class="col-2">Tag</div>
+          <div class="col">About</div>
+        </div>
+        <div v-for="t in aTags" class="row table-gen">
+          <div class="col-2">{{t[0]}}</div>
+          <div class="col">{{t[1]}}</div>
+        </div>
+      </div>
+
     </div>
 
     <button class="btn btn-light btn-block" type="button" data-toggle="collapse" data-target="#journeys">
@@ -601,11 +421,37 @@ const rules = `
       <p><em>Round fractions down, but the time cannot be less than one <bi>day</bi>. </em></p>
       <h3>Challenges and Progress</h3>
       <p>Every <bi>day</bi> of the <bi>journey</bi>, the heroes must face a 
-      <bi>challenge</bi>. Roll 2d12 and consult the <bi>Challenge Generator</bi> 
-      to determine the <bi>skill check / saving throw</bi> to use and give the challenge a difficulty (12+1d8). 
-      Procede based on whether the result is a skill or saving throw:
+      <bi>challenge</bi>. Roll 3d6 and consult the table. </p>
+
+      <div class="container table-gen" >
+        <div class="row table-gen">
+          <div class="col table-gen">
+            <div align="center">Ability</div>
+            <div class="d-flex justify-content-between p-1"><span>1</span><span>Strength</span></div>
+            <div class="d-flex justify-content-between p-1"><span>2</span><span>Dexterity</span></div>
+            <div class="d-flex justify-content-between p-1"><span>3</span><span>Constitution</span></div>
+            <div class="d-flex justify-content-between p-1"><span>4</span><span>Intelligence</span></div>
+            <div class="d-flex justify-content-between p-1"><span>5</span><span>Wisdom</span></div>
+            <div class="d-flex justify-content-between p-1"><span>6</span><span>Charisma</span></div>
+          </div>
+          <div class="col table-gen">
+            <div align="center">Difficulty / Damage</div>
+            <div class="d-flex justify-content-between p-1"><span>1-2</span><span>Easy / 1d6</span></div>
+            <div class="d-flex justify-content-between p-1"><span>3-4</span><span>Normal / 2d6</span></div>
+            <div class="d-flex justify-content-between p-1"><span>5-6</span><span>Hard / 4d6</span></div>
+          </div>
+          <div class="col table-gen">
+            <div align="center">Challenge/Saving Throw</div>
+            <div class="d-flex justify-content-between p-1"><span>1-4</span><span>Challenge</span></div>
+            <div class="d-flex justify-content-between p-1"><span>5-6</span><span>Saving Throw</span></div>
+          </div>
+        </div>
+      </div>
+      
+      <p>Once you have an ability, come up with a challenge / saving throw based around it. Now the heroes
+      have to solve what you've given them. 
       <ul>
-          <li>For a skill:
+          <li>For a challenge:
               <ul>
                   <li>One hero rolls at a time until there is success.</li>
                   <li>Only one hero must succeed to progress.</li>
@@ -618,18 +464,15 @@ const rules = `
               </ul>
           </li>
       </ul>
-      If any hero fails a roll, they take damage based on the difficulty: 5 x (DC-10). If the heroes make 
+      If any hero fails a roll, they take damage based on the difficulty. If the heroes make 
       progress reduce the travel time by one <bi>day</bi>. After the number of <bi>days</bi> reach 0 the heroes reach 
       their destination.</p>
-      <div align="center"><h4>Challenge Generator<h4></div>
-      `+genTables.challenge+`
 
       <h3>Resting on a Way</h3>
       <p>Heroes may/should <bi>rest overnight</bi> after a <bi>challenge</bi>, 
       but resting on a <bi>way</bi> is never as effective as resting in the 
       relative safety of a town. When they <bi>rest overnight on a way</bi> 
-      they only recover HP equal to their  Constitution modifier (minimum 1) times half
-      their level. 
+      they only recover half the HP that they would normally recover. 
       </p>
     </div>
 
@@ -779,53 +622,6 @@ const setting = `
 </div>
 `
 
-const faction = `
-<div class="border m-1 p-1" align="left">
-    <h2>{{faction.name}}</h2>
-    <div v-html="faction.info"></div>
-    <h4 align="center">{{faction.name}} Fronts</h4>
-    <div class="container table-gen my-2">
-        <div class="row table-gen">
-            <div class="col">Roll (d20)</div>
-            <div class="col">Front</div>
-        </div>
-        <div v-for="(f,i) in fronts" class="row table-gen">
-            <div class="col-2">{{faction.frontsP[i]}}</div>
-            <div class="col">{{f.name}} <em>(impulse: {{f.impulse}})</em></div>
-        </div>
-    </div>
-    <h4 align="center">Forces</h4>
-    <div class="container table-gen" align="center">
-        <div class="row table-gen">
-            <div class="col">CR</div>
-            <div class="col">Creature</div>
-        </div>
-        <div v-for="fcr in forcesByCR" class="row table-gen">
-            <div class="col">
-                <span v-if="fcr[0]!=-1">{{fcr[0]}}</span>
-                <span v-else>unassigned</span>
-            </div>
-            <div class="col d-flex">
-                <div class="px-1" v-for="f in fcr[1]">
-                    <div v-if="f.abilities" class="dashed pointer" @click="showForces.push(f)">{{f.name}}</div>
-                    <div v-else>{{f.name}}</div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="d-flex">
-        
-    </div>
-    <force :forces="showForces"></force>
-</div>
-`
-
-const factions = `
-<div class="m-1 p-1" align="left">
-    <faction v-for="F in factions" :faction="F"></faction>
-</div>
-`
-
 const forces = `
 <div class="m-1 p-1" align="left">
     <div class="container table-gen" align="center">
@@ -856,6 +652,8 @@ const forces = `
 UI 
 */
 const UI = (app)=>{
+  factionsUI(app)
+
   Vue.component("about",{
     template: about,
     methods : {
@@ -869,18 +667,16 @@ const UI = (app)=>{
   })
 
 
-  const allPowers = Object.entries(powerData.OSRPOWERS).sort((a,b)=> a[0]<b[0] ? -1 : 1 )
-  const powers = allPowers.filter(p => !p[1].feature)
-  const features = allPowers.filter(p => p[1].feature)
   Vue.component("rules",{
     template: rules,
     data: function() {
       return {
-        powers, features,
-        skills : SKILLS,
-        abilities: ABILITIES,
-        EP : ENERGYPOINTS,
-        powerTypes : powerData.POWERTYPES,
+        wTags : GEAR.WEAPONTAGS,
+        aTags : GEAR.ARMORTAGS,
+        melee : GEAR.MELEE,
+        ranged : GEAR.RANGED,
+        armor : GEAR.ARMOR,
+        hues : COSMICHUES
       }
     },
   })
@@ -936,71 +732,7 @@ const UI = (app)=>{
       this.realms = settingData.slice()
     },
   })
-  Vue.component("factions",{
-    template: factions,
-    data: function() {
-      return {
-        factions : [],
-      }
-    },
-    mounted() {
-      this.factions = coreFactions.slice()
-    },
-  })
-  Vue.component("faction",{
-    template: faction,
-    props : ["faction"],
-    data: function() {
-      return {
-        showForces : [],
-      }
-    },
-    computed : {
-        fronts () { 
-            let f = this.faction.fronts || []
-            return f.map(fid => {
-                return {
-                    name: frontsData.FRONTS[fid-1].front,
-                    impulse: frontsData.FRONTS[fid-1].impulse
-                }
-            })
-        }, 
-        forcesByCR () {
-            let F = this.faction
-            //map to CR 
-            let byCR = F.forces.reduce((all,f,i)=> {
-                let CR = f.CR.toString()
-                if(all[CR]) all[CR].push(f)
-                else all[CR] = [f] 
-                return all
-            },{})
 
-            return Object.entries(byCR).sort((a,b)=> Number(a[0]) - Number(b[0]))
-        }
-    }
-  })
-  Vue.component("force",{
-    template: forceData.STATBLOCK,
-    props : ["forces"],
-    computed: {
-        abilities () {
-            let abilities = ["strength","dexterity","constitution","intelligence","wisdom","charisma"]
-            let stats = ["STR","DEX","CON","INT","WIS","CHA"]
-            return this.forces.map(f=> {
-                return f.abilities.map((val,i) => {
-                    let bonus = Math.floor((val-10)/2)
-
-                    return {
-                        class : "ability-"+abilities[i],
-                        stat : stats[i],
-                        val : val,
-                        b : bonus >= 0 ? "+"+bonus : bonus
-                    }
-                })
-            })
-        }
-    }
-  })
   Vue.component("forces",{
     template: forces,
     data: function() {
@@ -1010,13 +742,7 @@ const UI = (app)=>{
     },
   })
 
-  Vue.component("power",{
-    template: powerData.template,
-    props : ["p","name"],
-    computed : {
-      type () { return powerData.POWERTYPES[this.p.type][0] }
-    }
-  })
 }
 
 export {UI}
+

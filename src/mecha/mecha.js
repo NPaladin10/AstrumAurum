@@ -1,113 +1,136 @@
+//frames 
+import {STATBLOCK} from "./statblock.js"
+//frames 
+import {AI} from "./AI.js"
+//frames 
+import {getFrame,pcFrames} from "./frames.js"
 //gear 
 import * as gear from "./gear-data.js"
 
-const CHASIS = {
-  "name": "",
-  "rank": 1,
-  "abilities": [1, 0, -1, -2],
-  "powers": []
-}
+const SHORTSTATS = `
+<div>
+  <div v-for="f in allFrames" align="left">
+    <h5 class="m-0">{{f.name}}</h5>
+    <div>Rank: {{f.rank}}, HP: {{f.hp}}, </div>
+  </div>
+  `+STATBLOCK+`
+</div>
+`
+
 const MECHA = {
   "name": "",
-  "chasis": "",
-  "powers": [],
+  "frame": "",
+  "mods" : [],
   "gear": [],
+  "eq" : [],
   "hp": 8,
 }
-//name, id, rank
-const POWER = ["Name",0,0]
 
+//
 const ABILITIES = ["Chasis", "Agility", "Systems", "Power"]
 
-const FRAMES = {
-  "generic" : ["Generic",1,[0,1,-1,-2],[]]
-}
-
-const NPCS = {
-  "generic-a" : ["Generic A","generic",[],["*wp.11","*ar.0"]]
-}
+const RATK = ["sarm", "larm" , "hvy", "gde"]
+const MATK = ["bmelee", "amelee"]
 
 const manager = (app)=>{
 
   const core = {} 
-  Object.entries(FRAMES).forEach(F => {
-    core[F[0]] = JSON.parse(JSON.stringify(CHASIS))
-
-    let ids = ["name","rank","abilities","powers"]
-    ids.forEach((id,i) => core[F[0]][id] = F[1][i])
-  })
-  Object.entries(NPCS).forEach(F => {
-    core[F[0]] = JSON.parse(JSON.stringify(MECHA))
-
-    let ids = ["name","chasis","powers","gear"]
-    ids.forEach((id,i) => core[F[0]][id] = F[1][i])
-  })
-  gear.WEAPONS.forEach((w,i) => core["wp."+i] = w)
+  gear.weapons.forEach((w,i) => core["wp."+i] = w)
   gear.ARMOR.forEach((w,i) => core["ar."+i] = w)
 
-  const chasis = {}
   const mecha = {}
-  const powers = {}
 
   class Mecha {
-    constructor(id,fid) {
+    constructor(id,fid,opts) {
       this._hash = chance.hash()
       this._id = id
       this._faction = fid || 0 
+      this._opts = opts || {}
 
+      //frame 
+      let cr = this._opts.cr || -1
+      this._frame = this.mecha ? getFrame(this.mecha.frame) : cr > -1 ? getFrame(id,cr) : getFrame(id)
+      //check for actions
+      if(this._opts.act) {
+        this._frame.act.push(...this._opts.act)
+      }
+
+      this.hp = this.mecha ? this.mecha.hp : this._frame.HP 
       this._nAct = 0
+      
       this._move = 0
+      this._moveTo = []
+      this._path = []
       this._p = [0,0]
+
+      this._visible = []
+      this._target = null
     }
-    get data () { 
-      let _m = this._id
-      return NPCS[_m] ? core[_m] : mecha[_m] 
+    get isPC () {
+      return this._frame.pc ? true : false 
+    }
+    get mecha () {
+      return mecha[this._id] 
     }
     get name() {
-      return this.data.name
+      return this.mecha ? this.mecha.name : this._opts.name || this._frame.name
     }
-    get npc () { return NPCS[this._id] ? true : false }
-    get coreFrame () { return FRAMES[this.data.chasis] ? true : false } 
     //display
     get char () {
       let colors = ["green","red"]
       return ["@",colors[this._faction]]
     }
-    //Chasis 
-    get chasis() {
-      let _c = this.data.chasis
-      return FRAMES[_c] ? core[_c] : chasis[_c]
-    }
-    get rank() {
-      return this.chasis.rank
-    }
-    get abilities () {
-      return this.chasis.abilities
-    }
     //Gear 
     get gear () {
-      return this.data.gear.reduce((all,g)=> {
-        let id = g.charAt(0) == "*" ? g.slice(1) : g 
-        let what = id.slice(0,2)
-        let data = core[id]
-
-        all[what].push(data)
+      let gear = this.mecha ? this.mecha.gear : []
+      return gear.reduce((all,g)=> {
+        //get data
+        let data = core[g]
+        //push to what the gear is
+        all[data.what].push(data) 
         return all 
-      },{ar:[],wp:[],g:[]})
+      },{ar:[],ratk:[],matk:[],g:[]})
     }
-    //Powers
-    get nP() {
-      return 2+this.rank-1
+    //AC
+    get AC () {
+      return this._frame.base[0]
     }
-    get powers () {
-      return this.chasis.powers.concat(this.data.powers).map(p=> {
-        return Array.isArray(p) ? p : powers[p]
-      })
+    //Attacks
+    attack (atk,target) {
+      let R = chance.d20() + this._frame.atkb
+      let text = this.name+" attacks "+target.name+", rolled "+R
+      let dmg = 0 
+      if(R >= target.AC) {
+        //get dmg
+        dmg = atk.doDmg() 
+        text += ", "+dmg+" dmg"
+      }
+      target.takeDmg(dmg)
+      //update UI 
+      app.UI.main.update.push(text) 
+    }
+    get maxAtkR () {
+      return this.ratk.reduce((max,atk)=> max = atk.r > max ? atk.r : max,1)
+    }
+    get atks () {
+      return this.ratk.concat(this.matk)
+    }
+    get ratk () {
+      //first check faction - player vs npc
+      //always use gear first
+      return this._faction == 0 && this.gear.ratk.length>0 ? this.gear.ratk : this._frame.ratk 
+    }
+    get matk () {
+      return this._faction == 0 && this.gear.matk.length>0 ? this.gear.matk : this._frame.matk
+    }
+    takeDmg (dmg) {
+      this.hp -= dmg
     }
     //movement
     get rMoves () { return this._move }
     get maxMove () {
-      return 30 / 5 
+      let m = this._frame.move 
+      return Number(m[0].slice(1))/5
     }
     get pos () { 
       return {
@@ -129,14 +152,44 @@ const manager = (app)=>{
     }
     //actions
     init () {
-      console.log(this.gear)
       this._nAct = 0 
       app.UI.main.actions = this.actions.slice()
       app.map.draw()
 
-      if(this._faction > 0) this.AI()
+      if(this._faction > 0) AI(app,this)
     }
-    AI () {
+    //FOV
+    FOV () {
+      let M = app.mechaManager, m = this;
+      let visible = this._visible = []
+      let fov = new ROT.FOV.PreciseShadowcasting(function(x,y){
+        var key = x+"."+y;
+        return app.map.zones[key] ? false : true
+      })
+      //targeting 
+      fov.compute(...this._p, 20, function(x, y, r, vis) {
+        let mAtP = M.byPos([x,y])
+        if(mAtP && mAtP._faction != m._faction){
+          visible.push([mAtP,r])
+        }
+      })
+    }
+    //pathfind 
+    pathfind (newPath) { 
+      /* prepare path to given coords */
+      let astar = new ROT.Path.AStar(...this._moveTo, function (x,y) {
+        let key = x+"."+y
+        return app.map.zones[key] ? false : true
+      })
+
+      //reset path
+      /* compute from given coords #1 */
+      astar.compute(...this._p, function (x, y){
+        newPath.push([x,y])
+      })
+      return newPath
+    }
+    wander () {
       //random move 
       let n = this.maxMove
       for(let i = 0; i < n; i++){
@@ -144,18 +197,15 @@ const manager = (app)=>{
         p = chance.pickone(p).split(".").map(Number)
         //do move 
         this.move(p)  
-        //draw map 
-        app.map.draw()
       }
-      //next turn 
-      this.act(["Next Turn"])
-    }
+      //draw map 
+      app.map.draw()
+    } 
     get actions () {
       if(this._faction > 0) return []
 
       let act = []
       if(this._nAct < 2) act.push(["Move"])
-      act.push(["Next Turn"])
 
       return act 
     }
@@ -164,12 +214,17 @@ const manager = (app)=>{
         this.doMove()
         this._nAct++
       }
-      if(what[0] == "Next Turn"){
+      else if(what[0] == "Next Turn"){
         app.UI.main.aid++
         if(app.UI.main.aid >= app.mechaManager.actives.length){
           app.UI.main.aid = 0 
         }
         app.map.active.init()
+      }
+      else if (what[0] == "attack"){
+        this._nAct++ 
+        //roll for attack 
+        this.attack(what[1],what[2])
       }
 
       //update UI 
@@ -182,16 +237,28 @@ const manager = (app)=>{
   app.mechaManager = {
     _active : [],
     //activate a mecha and drop it in 
-    activate (id,fid) {
+    activate (id,fid,opts) {
       let i = this._active.length
-      this._active.push(new Mecha(id,fid)) 
+      this._active.push(new Mecha(id,fid,opts)) 
       return this._active[i]      
     },
+    get pcFrames () { return pcFrames },
     get actives () { return this._active },
     byPos (p) { 
       return this.actives.find(a => a._p.join(".") == p.join("."))
     }
   }
+
+  //UI 
+  Vue.component("frames",{
+    template: SHORTSTATS,
+    data : function() {
+      return {
+        allFrames : pcFrames.map(f=> f.statblock)
+      }
+    },
+    computed : {}
+  })
 }
 
 export {manager}

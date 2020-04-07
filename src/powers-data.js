@@ -513,7 +513,7 @@ new saving throw is allowed every turn.`
       capable of breathing at high altitudes (30,000 ft. or more) where the air is thin
       he or she may fly at up to 2x their speed.`
   },
-  "Force Feild" : {
+  "Force Field" : {
     "type" : "S",
     "cost" : 1,
     "AC" : ["+4","+5","+6"],
@@ -1495,4 +1495,23 @@ const OSRPOWERHTML = `
 </div>
 `
 
-export {OSRPOWERS,OSRPOWERHTML as template,POWERTYPES}
+const shortText = (_id) => {
+  let id = _id.split("."), r = Number(id[1])-1, data = OSRPOWERS[id[0]];
+  let text = id[0]
+  //if there is a cost include it 
+  if(data.cost) {
+    text += " ["+data.cost
+    if(data.reduced) text+= "<sup>R</sup>"
+    text += "]"
+  } 
+  //check for range 
+  if(data.range) {
+    text += "("+data.range[r+1]+data.range[0]+")"
+  }
+  //check for damage 
+  if(data.dmg) text += " " + data.dmg[r]
+  //return
+  return text
+}
+
+export {OSRPOWERS,OSRPOWERHTML as template,POWERTYPES,shortText}

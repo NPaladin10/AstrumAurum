@@ -8,6 +8,7 @@
     <link rel="stylesheet" type="text/css" href="lib/noty.3.1.4.min.css">
     <link rel="stylesheet" type="text/css" href="lib/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="src/main.css">
+    <link rel="stylesheet" type="text/css" href="src/statblock.css">
   </head>
   <body>
     <div id="ui-main" class="w-100" align="center">
@@ -24,33 +25,57 @@
           </div>
           <div class="card collapse" id="menu-list" style="position: absolute;width:200px;right:50px;z-index:100">
             <div class="card card-body p-1">
-              <a type="button" class="btn btn-block btn-info" href="outlands.html">Outlands</a>
+              <a type="button" class="btn btn-block btn-info" href="index.html">Astrum Home</a>
+              <a type="button" class="btn btn-block btn-info" @click="show='frames'" data-toggle="collapse" href="#menu-list">Frames</a>
             </div>
           </div>
         </div>
       </div>
-      <div class="m-2">
-        <a type="button" class="btn btn-block btn-info" href="index.html">Astrum Home</a>
+      <div v-if="show=='frames'">
+        <frames></frames>
       </div>
-      <div id="display"></div>
-      <div v-if="aid > -1 && active._faction==0">Moves: {{moves}} {{pos}}</div>
-      <div style="max-width:600px">
-        <div class="container">
-          <div class="row">
-            <div class="col">
-              <button type="button" class="btn btn-light btn-block" v-for="a in actions" @click="act(a)">{{a[0]}}</button>
-              <div v-for="m in inRange">{{m}}</div>
-            </div>
-            <div class="col-3" v-if="moves>0">
-              <button type="button" class="btn btn-light px-3" @click="move('y',-1)">U</button>
-              <div>
-                <button type="button" class="btn btn-light px-3" @click="move('x',-1)">L</button>
-                <button type="button" class="btn btn-light px-3" @click="move('x',1)">R</button>
-              </div>
-              <button type="button" class="btn btn-light px-3" @click="move('y',1)">D</button>
+      <div v-if="show=='game'">
+        <div id="display"></div>
+        <div v-if="update" align="center">
+          <div v-for="(u,i) in update">
+            <div class="btn-group btn-group-sm" role="group" style="width:500px;">
+              <button type="button" class="btn btn-light btn-block">{{u}}</button>
+              <button type="button" class="btn btn-dark" @click="update.splice(i,1)">&#10006;</button>
             </div>
           </div>
-          <div></div>
+        </div>
+        <div v-if="aid > -1 && active._faction==0">{{active.name}} | HP {{active.hp}} | Actions: {{2-active._nAct}} | Moves: {{moves}} {{pos}}</div>
+        <div style="max-width:600px">
+          <div class="container">
+            <div class="row">
+              <div class="col">
+                <div class="input-group mb-1" v-if="tid>-1 && active._nAct < 2 && active._faction == 0">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">{{target.name}}</span>
+                  </div>
+                  <select class="custom-select" v-model="atk">
+                    <option v-for="a in attacks" :value="a">{{a.name}} ({{a.dmg}})</option>
+                  </select>
+                  <div class="input-group-append">
+                    <button type="button" class="btn btn-success" @click="act('attack')" v-if="atk">Attack</button>    
+                    <button type="button" class="btn btn-secondary" @click="setTarget(-1)">&#10006;</button>    
+                  </div>
+                </div>
+                <button type="button" class="btn btn-light btn-block" v-for="(t,i) in targets" @click="setTarget(i)" v-if="tid==-1 && active._faction == 0">Attack {{t.name}}</button>
+                <button type="button" class="btn btn-light btn-block" v-for="a in actions" @click="act(a)">{{a[0]}}</button>
+                <button type="button" class="btn btn-light btn-block" @click="act(['Next Turn'])">Next Turn</button>
+              </div>
+              <div class="col-3" v-if="moves>0 && active._faction == 0">
+                <button type="button" class="btn btn-light px-3" @click="move('y',-1)">U</button>
+                <div>
+                  <button type="button" class="btn btn-light px-3" @click="move('x',-1)">L</button>
+                  <button type="button" class="btn btn-light px-3" @click="move('x',1)">R</button>
+                </div>
+                <button type="button" class="btn btn-light px-3" @click="move('y',1)">D</button>
+              </div>
+            </div>
+            <div></div>
+          </div>
         </div>
       </div>
       <!--END MENU---------------------------------------------->

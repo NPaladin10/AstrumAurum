@@ -1,5 +1,3 @@
-import * as forceData from "./forces-data.js"
-
 const FACTIONS = {
   "aboleth": {
     "name": "Aboleth",
@@ -153,35 +151,45 @@ const FRONTS = {
   }
 }
 
+import * as aboleth from "./faction-aboleth.js"
+import * as immortals from "./faction-immortals.js"
+import * as shadowsteel from "./faction-shadowsteel.js"
+import * as myr from "./faction-myr.js"
+import * as goblyns from "./faction-goblyns.js"
+
 const FORCES = {
-  "aboleth": "Chuul,Merrow,Kuo-Toa,Rune Naga,Water Elemental",
-  "archons": "Knight,Champion,Enchanter,Deva",
+  "aboleth": aboleth.FORCES,
+  "archons": null,
   "asgard": null,
-  "blackflame": "Fire Giant,Fire Giant Dreadnought,Fire Elemental,Fire Elemental Myrmidon,Firenewt Warrior,Salamander,Eternal Flame Guardian,Eternal Flame Priest,Magma Mephit,Azer,Magmin",
+  "blackflame": null, //"Fire Giant,Fire Giant Dreadnought,Fire Elemental,Fire Elemental Myrmidon,Firenewt Warrior,Salamander,Eternal Flame Guardian,Eternal Flame Priest,Magma Mephit,Azer,Magmin",
   "bloodtiamat": null,
   "deva": null,
-  "fae": "Dryad,Sprite,Pixie,Nereid,Druid,Vine Blight,Lion,Eagle",
+  "fae": null, //"Dryad,Sprite,Pixie,Nereid,Druid,Vine Blight,Lion,Eagle",
   "gaolarch": null,
-  "goblyns": "Goblin,Goblin Boss,Dust Mephit,Magma Mephit,Mud Mephit,Steam Mephit,Troll,Needle Blight",
-  "guardians": "Sword Guardian,Shield Guardian,Crown Guardian",
-  "jadeempire": "Light Jade Automaton,Jade Guard,Remote Sentry,Earth Shaper,Water Shaper,Fire Shaper,Wind Shaper,Forest Shaper",
+  "goblyns": goblyns.FORCES, 
+  "guardians": null, //"Sword Guardian,Shield Guardian,Crown Guardian",
+  "jadeempire": null, //"Light Jade Automaton,Jade Guard,Remote Sentry,Earth Shaper,Water Shaper,Fire Shaper,Wind Shaper,Forest Shaper",
   "mechan": null,
-  "myr": "Shadow,Wolf,Bat,Giant Bat,Shadow Mote Swarm,Evoker,Conjurer,Illusionist",
+  "myr": myr.FORCES, 
   "olympian": null,
   "platinumstar": null,
   "sect": null,
-  "shadowsteel": "Shadow,Hound,Raven,Swarm of Ravens,Grunt,Blademaster,Night Rogue",
-  "starhive": "Hydra,",
+  "shadowsteel": shadowsteel.FORCES,
+  "starhive": null, //"Hydra,",
   "ymir": null,
   "starlord": null,
-  "immortal": "Faceless Legionary,Faceless Centurion,Faceless Arc Knight,Faceless Primus,Faceless Hierophont,Black Earth Priest,Eternal Flame Priest,Lesser Immortal,Cloud Giant",
+  "immortal": immortals.FORCES,
   "xaoti": null,
-  "warden": "Ranger,Wilder,Zverhai",
+  "warden": null, //"Ranger,Wilder,Zverhai",
   "worm": null,
-  "yuloth": "Merc Guard,Merc Captain,Sentry Drone,Evoker,Conjuror"
+  "yuloth": null, //"Merc Guard,Merc Captain,Sentry Drone,Evoker,Conjuror"
 }
 
 const show = ["aboleth", "archons", "fae", "goblyns", "guardians", "jadeempire", "myr", "shadowsteel", "immortal", "warden"]
+
+import {MONSTERS} from "../ogl-monster-data.js"
+import {SHORTBLOCK,getBlockData} from "./monster-statblock-osr.js"
+const forceHTML = SHORTBLOCK
 
 const data = Object.entries(FACTIONS).map(F=>{
   let id = F[0]
@@ -196,11 +204,11 @@ const data = Object.entries(FACTIONS).map(F=>{
   //look for forces
   faction.forces = []
   if (FORCES[id]) {
-    faction.forces = FORCES[id].split(",").map(forceData.byId)
+    faction.forces = Object.values(FORCES[id]).map(getBlockData)
   }
 
   return faction
 }
 ).filter(f=>show.includes(f.id))
 
-export {data}
+export {data, forceHTML}

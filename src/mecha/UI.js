@@ -49,10 +49,14 @@ const UI = (app)=>{
     //get a list of empty places in an area
     open(x1,x2,y1,y2) {
       let open = []
-      for(let x = x1; x < x2; x++){
-          for(let y = y1; y < y2; y++){
+      for(let x = x1; x <= x2; x++){
+          for(let y = y1; y <= y2; y++){
+            if(x < 0 || y < 0 || x > this.size-1 || y > this.size-1) continue
+            
             let pid = [x,y].join(".")
-            if(x > 0 && y > 0 && x < this.size-1 && y < this.size-1 && !this.zones[pid] && !this.activePos[pid]) open.push(pid)
+            if(this.zones[pid] || this.activePos[pid]) continue
+            
+            open.push(pid)
           }
         }
       
@@ -70,7 +74,29 @@ const UI = (app)=>{
     },
     randomMove (x,y) {
       return this.open(x-1,x+1,y-1,y+1)
-    }, 
+    },
+    //seet up a seek queue given a current position 
+    seekQueue (x,y) {
+      let max = this.size-1
+      let half = Math.round(max/2)
+      // tr, hl, br, bl, hr, tl  
+      let q = [[max,0],[0,half],[max,max],[0,max],[max,half],[0,0]]
+      let _open = q.map(_q => _q.map(qi => qi == 0 ? [0,10] : qi == max ? [max-10,max] : [qi-5,qi+5]).flat())
+        .map(_q => this.open(..._q))
+      //find closest q 
+      let qStart = q.reduce((idx,_q,i)=>{
+        //get distance
+        let dx = _q[0]-x, dy = _q[1]-y;
+        let d = Math.sqrt(dx*dx+dy*dy)
+        //check for distance 
+        return d < idx[0] ? [d,i] : idx 
+      },[Infinity,-1])
+      //the q to seek 
+      let i = qStart[1] 
+      let p = i == 5 ? _open[0] : _open[i+1]
+      //return a viable point
+      return chance.pickone(p)
+    },
     //check for a move 
     move (d,n) {
       let pos = this.pos
@@ -88,6 +114,8 @@ const UI = (app)=>{
       }
     },
     draw () {
+      //get UI
+      let UI = app.UI.main
       let pos = this.pos
       let max = this.size, zones = this.zones;
       //display starting point
@@ -116,32 +144,30 @@ const UI = (app)=>{
       let dpx = view/2, dpy = view/2;
       dpx = pos.x < dpx ? pos.x : pos.x > max-dpx ? view-(max-pos.x) : dpx 
       dpy = pos.y < dpy ? pos.y : pos.y > max-dpy ? view-(max-pos.y) : dpy 
-      //delete in range 
-      app.UI.main.inRange = []
+
+      //draw character 
+      const drawChar = (what,color) => {
+        color = color || ""
+        let p = what._p
+        display.draw(p[0]-dx,p[1]-dy,...what.char,color)
+      }
+
       //fov 
-      let fov = new ROT.FOV.PreciseShadowcasting(function(x,y){
-        var key = x+"."+y;
-        return app.map.zones[key] ? false : true
-      })
       mecha.actives.forEach(m => {
         //only compute FOV for player 
         if(m._faction > 0) return
-
-        fov.compute(m.pos.x, m.pos.y, 5, function(x, y, r, vis) {
-          var c = char(x,y)
-          display.draw(x-dx, y-dy, ...c, "#660")
-
-          //done if not the active mecha 
-          if(m._hash != app.map.active._hash) return
-
-          //push who is within range 
-          let mAtP = mecha.byPos([x,y])
-          if(mAtP && mAtP._faction > 0){
-            app.UI.main.inRange.push(mAtP._hash)
-          }
-        })
+        //targeting 
+        m.FOV()
+        //draw 
+        m._visible.forEach(v => drawChar(v[0]))
       })
-      
+      UI.visible = this.active._visible.slice()
+
+      //visible player 
+      if(this.active._faction == 0) drawChar(this.active,"white") 
+
+      //visible target 
+      if(UI.target) drawChar(UI.target,"#0f0")  
 
       //update the UI 
       if(app.UI.main) {
@@ -162,24 +188,31 @@ const UI = (app)=>{
   app.UI.main = new Vue({
     el: '#ui-main',
     data: {
-      show: "about",
+      show: "game",
+      allFrames : [],
       now: Date.now() / 1000,
       aid : -1,
       pos : [0,0],
       moves : 0,
       actions : [],
-      inRange : [],
+      visible : [],
+      tid : -1,
+      atk : null,
+      update : []
     },
     mounted() {
       setInterval(()=>this.now = Date.now() / 1000, 500)
       init()      
       map.init()
       //drop mecha 
-      for(let i = 0; i < 2; i++){
+      for(let i = 0; i < 4; i++){
         //clear drop zone 
         let dz = map.open(0,6,0,6)
         //activate mecha 
-        let m = mecha.activate("generic-a")
+        let m = mecha.activate("generic",0,{
+          cr:0.125,
+          act : [["Smash","maw"],["Rifle","raw"]]
+        })
         //drop 
         m._p = chance.pickone(dz).split(".").map(Number)
       }
@@ -187,9 +220,11 @@ const UI = (app)=>{
         //clear drop zone 
         let dz = map.open(9,15,0,6)
         //activate mecha 
-        let m = mecha.activate("generic-a",1)
+        let m = mecha.activate("hive-blade",1,{cr:0.5})
+        let n = mecha.activate("hive-spine",1)
         //drop 
         m._p = chance.pickone(dz).split(".").map(Number)
+        n._p = chance.pickone(dz).split(".").map(Number)
       }
 
       Vue.nextTick(()=>{
@@ -202,11 +237,28 @@ const UI = (app)=>{
       day() {
         return app.day
       },
-      active () { return mecha.actives[this.aid] }
+      active () { return mecha.actives[this.aid] },
+      targets () {
+        return this.visible.map(v => v[0])
+      },
+      target () { return this.targets[this.tid] },
+      attacks () {
+        //return attacks that are greater than the range of the target 
+        return this.active.atks.filter(atk => atk.r >= this.visible[this.tid][1])
+      }
     },
     methods: {
       move (d,n) { map.move(d,n) },
-      act (what) { map.active.act(what) }
+      act (what) { 
+        if(what != "attack") map.active.act(what) 
+        else {
+          map.active.act(["attack",this.atk,this.target])
+        }
+      },
+      setTarget(i) {
+        this.tid = i
+        map.draw()
+      }
     }
   })
 

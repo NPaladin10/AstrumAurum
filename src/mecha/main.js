@@ -69,6 +69,9 @@ const app = {
   },
   // ----------- dice rolls ------------------------------ //
   roll : {
+    dmg(d) {
+      return chance.rpg(d,{sum:true})
+    },
     dF(b,D) {
       b = b || 0
       D = D || 0
