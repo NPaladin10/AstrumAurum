@@ -1,3 +1,6 @@
+import {UI as aboutUI} from "./about.js"
+import {UI as factionUI} from "./factions.js"
+
 const resize = () => {
   //set svg to window 
     let iW = window.innerWidth
@@ -11,6 +14,9 @@ window.addEventListener("resize", resize )
 UI 
 */
 const UI = (app)=>{
+  factionUI(app)
+  aboutUI(app)
+  
   const mecha = app.mechaManager 
 
   const view = 40
@@ -188,7 +194,7 @@ const UI = (app)=>{
   app.UI.main = new Vue({
     el: '#ui-main',
     data: {
-      show: "game",
+      show: "about",
       allFrames : [],
       now: Date.now() / 1000,
       aid : -1,
@@ -202,8 +208,8 @@ const UI = (app)=>{
     },
     mounted() {
       setInterval(()=>this.now = Date.now() / 1000, 500)
-      init()      
-      map.init()
+      //init()      
+      //map.init()
       //drop mecha 
       for(let i = 0; i < 4; i++){
         //clear drop zone 
@@ -229,8 +235,8 @@ const UI = (app)=>{
 
       Vue.nextTick(()=>{
         this.aid = 0 
-        map.draw()
-        map.active.init()
+        //map.draw()
+        //map.active.init()
       })
     },
     computed: {

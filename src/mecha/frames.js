@@ -464,7 +464,7 @@ const getStatblock = (frame) => {
   let pb = 2 + Math.floor((frame.lv-1)/4)
 
   //abilities 
-  let abnames = ["Chasis","Agility","Systems","Power"]
+  let abnames = ["Chassis","Agility","Systems","Power"]
   let stats = ["CHS","AGI","SYS","POW"]
   let _ab = frame.abilities || [10,10,10,10]
   let abilities = _ab.map((val,i) => {
