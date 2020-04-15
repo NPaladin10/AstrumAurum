@@ -1,3 +1,24 @@
+const GEAR = [
+  [`A Melee Weapon or Two`,`Swords, a mace, an axe or two, or maybe a rapier or a spear. It’s always made from some special metal or maybe it’s a vibro-weapon – modern armor demands that pointy and stabby gear remains on the cutting edge of dangerous tech.`,1],
+  [`Throwing Knives`,`A handful of small, light blades. Like with regular weapons, something makes them more dangerous than your standard kitchen knife.`,1],
+  [`A Pistol`,`A light, single handed firearm. What kind of energy does it shoot? Dangerous out to speaking distance. Quick to reload.`,1],
+  [`A Large Weapon`,`A two handed implement of doom. It may be a greatsword, battle axe or pole-arm. Alternately, for those who like to keep their distance it could be a bow or a rifle.`,2],
+  [`An Unusual Weapon`,`It isn’t normally a weapon, but you’ll prove otherwise.`,1],
+  [`Ammo`,`Extra ammunition. An extra set of throwing knives, arrows, bullets.`,"1+"],
+  [`Armor`,`Common light armor is a misnomer – not really light but it does help stop things intent on your harm. Maybe its padded and reinforced composites or perhaps rune etched padded leather is more your style.`,2],
+  [`Heavy Armor`,`More complete protection – from head to toe.`,4],
+  [`Burglary Gear`,`An autopicker. A maglock sequencer. A suction-cup glass cutter. A small pry-bar. Vial of lubricant for squeaky hinges. A small pouch of fine sand.`,1],
+  [`Climbing Gear`,`Grappling hooks. Magnetic shoe pads. Suction cup gloves. Carbiners and crampons. Secure rigging for assisted climbing maneuvers.`,2],
+  [`Documents`,`Access to a collection of varied information including a registry of the important people and recent events of a region. A number of interesting maps. A suite of dictation and word-processing software and a few sheets of blank digital paper.`,1],
+  [`Demolition Tools`,`Impact drill and power packs. A welding torch and large fuel tank. Heavy-duty crowbar.Secure rigging for assisted climbing maneuvers.`,2],
+  [`Lighting: A string of work lights, kinetically charging flashlight or lantern, or focused spotlight.`,1],
+  [`Mechanical Tools`,`A set of heavy tools for working on machinery. Gas-powered jack stands, large screwdrivers and wrenches, heavy clamps, and air compressor. Usable sections of scrap metal, a handheld miniwelder, and small gas tank.`,2],
+  [`Subterfuge Supplies`,`A theatrical makeup kit and costume jewelry. A collection of blank license templates, ready for the forger’s hand. A reversible trenchcoat and distinctive hat. A maglock skeleton key. A lightweight earpiece containing a tiny communicator.`,1],
+  [`Technical Tools`,`A basic set of tools for detailed mechanical or electrical work. Soldering iron, spools of wire, precision screwdrivers & wrenches, and a small case containing assorted fasteners. Small hammer and pry bar, an assortment of chargers and power packs, a universal data cable.`,1],
+  [`Arcane Implements`,`A vial of quicksilver. A pouch of black salt. A spirit anchor in the form of a small stone. A spirit bottle. A vial of electroplasm, designed to break and splatter on impact.`,1],
+  [`Hued Cosmic`,`A set of three finger sized shards of gemstone cosmic. Pick the hues as required. You can’t carry more than one set or it produces feedback. [3 uses]`,0]
+]
+
 /*
   "Name" : {
     "name" : "",
@@ -465,24 +486,7 @@ const CREWPLAYBOOKS = {
       "name": "War Dogs",
       "text": `When you’re at war (-3 faction status), your crew does not suffer -1 hold and PCs still get two downtime activities, instead of just one.`,
     }],
-    "map" : [
-      [`Barracks`,`+1 scale for your Thug cohorts`],
-      [`Turf`],
-      [`Terrorized Citizens`,`+2 coin for battle or extortion`],
-      [`Informants`,`+1d gather info for scores`],
-      [`Protection Racket`,`(Tier roll) - Heat = coin in downtime`],
-      [`Fighting Pits`,`(Tier roll) - Heat = coin in downtime`],
-      ["Turf"],
-      ["Lair"],
-      ["Turf"],
-      ["Turf"],
-      [`Infirmary`,`+1d to healing rolls`],
-      [`Bluecoat Intimidation`,`-2 heat per score`],
-      [`Street Fence`,`+2 coin for lower-class targets`],
-      [`Warehouses`,`Stockpiles give you +1d to acquire assets`],
-      [`Bluecoat Confederates`,`+1d engagement for assault plans`]
-    ],
-    "upgrades" : ["Bravos rigging (2 free load of weapons or armor)","Ironhook Contacts (+1 Tier in prison)","Elite Rovers","Elite Thugs","Hardened (+1 trauma box)"]
+    "upgrades" : ["Bravos rigging:2 free load of weapons or armor","Ironhook Contacts:+1 Tier in prison","Elite Rovers","Elite Thugs","Hardened:+1 trauma box"]
   },
   "Merchants": {
     "name": "Merchants",
@@ -506,24 +510,7 @@ const CREWPLAYBOOKS = {
       "name": "Hooked",
       "text": `Your gang members use your product. Add the savage, unreliable, or wild flaw to your gangs to give them +1 quality.`,
     }],
-    "map" : [
-      [`Turf`],
-      [`Personal Clothier`,`+1d engagement roll for social plans`],
-      [`Local Graft`,`+2 coin for for show of force or socialize`],
-      [`Lookouts`,`+1d to Survey or Hunt on your turf`],
-      [`Informants`,`+1d gather info for scores`],
-      ["Turf"],
-      ["Turf"],
-      ["Lair"],
-      ["Turf"],
-      [`Luxury Venue`,`+1d to Consort and Sway on site`],
-      [`Foreign Market`,`(Tier roll) - Heat = coin in downtime`],
-      [`Vice Den`,`(Tier roll) - Heat = coin in downtime`],
-      [`Surplus Caches`,`+2 coin for for product sale or supply`],
-      [`Cover Opperation`,`-2 heat per score`],
-      [`Cover Identities`,`+1d engagement for deception and transport plans`],
-    ],
-    "upgrades" : ["Merchants' rigging (1 carried item is concealed and has no load)","Ironhook Contacts (+1 Tier in prison)","Elite Rooks","Elite Thugs","Composed (+1 stress box)"]
+    "upgrades" : ["Merchants' rigging:1 carried item is concealed and has no load","Ironhook Contacts:+1 Tier in prison","Elite Rooks","Elite Thugs","Composed:+1 stress box"]
   },
   "Shadows": {
     "name": "Shadows",
@@ -547,24 +534,7 @@ const CREWPLAYBOOKS = {
       "name": "Lurking",
       "text": `When you follow someone to their destination, take +1d to avoid being noticed.`,
     }],
-    "map" : [
-      [`Interrogation Chamber`,`+1d to Command and Sway on site`],
-      [`Turf`],
-      [`Loyal Fence`,`+2 coin for burglary or robbery`],
-      [`Gambling Den`,`(Tier roll) - Heat = coin in downtime`],
-      [`Tavern`,`+1d to Consort and Sway on site`],
-      [`Drug Den`,`(Tier roll) - Heat = coin in downtime`],
-      [`Informants`,`+1d gather info for scores`],
-      ["Lair"],
-      ["Turf"],
-      [`Lookouts`,`+1d to Survey or Hunt on your turf`],
-      [`Hagfish Farm`,`Body disposal, +1d to reduce heat after killing`],
-      [`Infirmary`,`+1d to healing rolls`],
-      [`Covert Drops`,`+2 coin for espionage or sabotage`],
-      ["Turf"],
-      [`Secret Pathways`,`+1d engagement for stealth plans`],
-    ],
-    "upgrades" : ["Theif Rigging (2 free load of tools or gear)","Underground maps & passkeys","Elite Rooks","Elite Skulks","Composed (+1 stress box)"]
+    "upgrades" : ["Theif Rigging:2 free load of tools or gear","Underground maps & passkeys","Elite Rooks","Elite Skulks","Composed:+1 stress box"]
   },
   "Wayfinders": {
     "name": "Wayfinders",
@@ -588,24 +558,7 @@ const CREWPLAYBOOKS = {
       "name": "Renegades",
       "text": `Each PC may add +1 action rating to Finesse, Prowl, or Skirmish (up to a max rating of 3).`,
     }],
-    "map" : [
-      [`Turf`],
-      [`Side Business`,`(Tier roll) - Heat = coin in downtime`],
-      [`Luxury Fence`,`+2 coin for high class targets`],
-      [`Side Business`,`(Tier roll) - Heat = coin in downtime`],
-      [`Tavern`,`+1d to Consort and Sway on site`],
-      [`Ancient Gate`,`Safe passage in the Deathlands`]
-      [`Turf`],
-      ["Lair"],
-      ["Turf"],
-      [`Turf`],
-      [`Secret Routes`,`+1d engagement for transport plans`],
-      [`Informants`,`+1d gather info for scores`],
-      [`Fleet`,`Your cohorts have their own vehicles`],
-      [`Cover Opperation`,`-2 heat per score`],
-      [`Warehouse`,`Stockpiles give you +1d to acquire assets`],
-    ],
-    "upgrades" : ["Smuggler's Rigging (2 items carried are perfectly concealed)","Camouflage (vehicles are perfectly concealed at rest)","Elite Rovers","Composed (+1 stress box)"]
+    "upgrades" : ["Smuggler's Rigging:2 items carried are perfectly concealed","Camouflage:vehicles are perfectly concealed at rest","Elite Rovers","Composed:+1 stress box"]
   },
   "Arcanomancers": {
     "name": "Arcanomancers",
@@ -620,11 +573,69 @@ const CREWPLAYBOOKS = {
       "name": "Researcher",
       "text": `Each PC gains an additional Vice: Research. When you indulge this vice, you don't overindulge if you clear excess stress. In addition, each player gets a free gambit from now until you indulge this vice again.`,
     }],
-    "map" : [
-,
-    ],
     "upgrades" : []
   },
 }
 
-export {PCPLAYBOOKS,CREWPLAYBOOKS}
+const CREWUPGRADES = [
+  [`Personnel`,`Personnel is either a group of individuals or a single expert NPC who works for your crew. For all the details on personnel, see the following pages.`],
+  [`Hidden HQ`,`Your HQ has a secret location and is disguised to hide it from view. If your HQ is discovered, use two downtime activities and pay coin equal to your Tier to relocate it and hide it once again.`],
+  [`Mastery`,`Your crew has access to master level training. You may advance your PCs’ action ratings to 4 (until you unlock this upgrade, PC action ratings are capped at 3). This costs four upgrade boxes to unlock.`],
+  [`Quality`,`Each upgrade improves the quality rating of all the PCs’ items of that type, beyond the quality established by the crew’s Tier and fine items. You can improve the quality of Documents, Gear (covers Burglary Gear and Climbing Gear), Arcane Implements, Subterfuge Supplies, Tools (covers Demolitions Tools and Tinkering Tools), and Weapons.`,`So, if you are Tier 0, with fine lockpicks (+1) and the Quality upgrade for gear (+1), you could contend equally with a Tier II quality lock.`],  
+  [`Quarters`,`Your HQ includes living quarters for the crew. Without this upgrade, each PC sleeps elsewhere, and is vulnerable when they do so.`],
+  [`Secure HQ`,`Your HQ has locks, alarms, and traps to thwart intruders. A second upgrade improves the defenses to include arcane measures that work against the supernatural. You might roll your crew’s Tier if these measures are ever put to the test, to see how well they thwart an intruder.`],
+  [`Training`,`If you have a Training upgrade, you earn 2 xp (instead of 1) when you train a given xp track during downtime (Insight, Prowess, Resolve, or Playbook xp). This upgrade essentially helps you advance more quickly.`,`If you have Insight Training, when you train Insight during downtime, you mark 2 xp on the Insight track (instead of just 1). If you have Playbook Training, you mark 2 xp on your playbook xp track when you train.`],
+  [`Vault`,`Your HQ has a secure vault, increasing your storage capacity for coin to 8. A second upgrade increases your capacity to 16. A separate part of your vault can be used as a holding cell.`],
+  [`Workshop`,`Your HQ has a workshop appointed with tools for tinkering and alchemy, as well as a small library of books, documents, and maps. You may accomplish long-term projects with these assets without leaving your lair.`]
+]
+
+const BONDS = [
+      [`Turf`,`Counts as Rep. Max of 4.`],
+      [`Side Business`,`(Tier roll) - Heat = coin in downtime`],
+      [`Cover Opperation`,`-2 heat per score`],
+      [`Infirmary`,`+1d to healing rolls`],
+      [`Informants`,`+1d gather info for scores`],
+      [`Warehouses`,`Stockpiles give you +1d to acquire assets`],
+
+      [`Lookouts`,`+1d to Survey or Hunt on your turf`],
+      [`Tavern/Luxury Venue`,`+1d to Consort and Sway on site`],
+
+      [`Cover Identities`,`+1d engagement for deception and transport plans`],
+      [`Archon Confederates`,`+1d engagement for assault plans`],
+      [`Secret Ways`,`+1d engagement for stealth and transport plans`],
+      [`Personal Clothier`,`+1d engagement roll for social plans`],
+      [`Extenisve Labs`,`+1d engagement roll for research plans`],
+
+      [`Hearts & Minds `,`+2 coin for protecting or clearing`],
+      [`Street Fence`,`+2 coin for lower-class targets`],
+      [`Luxury Fence`,`+2 coin for high class targets`],
+      [`Loyal Fence`,`+2 coin for burglary or robbery`],
+      [`Covert Drops`,`+2 coin for espionage or sabotage`],      
+      [`Local Graft`,`+2 coin for for show of force or socialize`],
+      [`Surplus Caches`,`+2 coin for for product sale or supply`],
+
+      [`Barracks`,`+1 scale for your Thug cohorts`],
+      [`Fleet`,`Your cohorts have their own vehicles`], 
+      [`Catalog of Ways`,`Safe travel within a certain Region - you don't have to make a Travel Roll to get where you want to go`]      
+]
+
+const PLANS = [
+  [`Attack plan`,`Do violence to a target.`,`The point of attack.`],
+  [`Deception Plan`,`Lure, trick, or manipulate.`,`The method of deception.`],
+  [`Research Plan`,`Exploit (pseudo-)science and the forces of nature.`,`The science/force you will exploit.`],
+  [`Stealth plan`,`Trespass unseen where you're not wanted.`,`The entry point of infiltration.`],
+  [`Social plan`,`Negotiate, bargain, or persuade.`,`The social connection you're using.`],
+  [`Transport Plan`,`Move something from place to place.`,`Coordinates or course.`]
+]
+
+const PERSONNEL = [
+  [`Artificers`,`Chemists, engineers, mechanics, saboteurs.`],
+  [`HR`,`Diplomats, sales, and psychologists.`],
+  [`Medical`,`Doctors, biologists, and chemists.`],
+  [`Rogues`,`Infiltrators, thieves, and spies.`],
+  [`Scouts`,`Scouts, `],
+  [`Soldiers`,`Soldiers, toughs, mercs, and guards.`],
+  [`Science`,`Cyberneticists, sensor technicians, physicists.`]	
+]
+
+export {PCPLAYBOOKS,CREWPLAYBOOKS,PLANS,GEAR,BONDS,CREWUPGRADES,PERSONNEL}
