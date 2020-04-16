@@ -1,13 +1,17 @@
-import {PCPLAYBOOKS,CREWPLAYBOOKS,GEAR,BONDS,CREWUPGRADES,PERSONNEL} from "./playbooks.js"
+import {PCPLAYBOOKS,CREWPLAYBOOKS,GEAR,BONDS,CREWUPGRADES,PERSONNEL,PLANS} from "./playbooks.js"
+import {FACTIONS,HTML as FACTIONHTML} from "./factions.js"
 
 const ABOUT = `
 <div class="p-1 m-1" align="left">
   <p>This is a Forged in the Dark adaptation of Planescape style planehopping adventure.</p>
 
-  <h4>Gambits</h4>
-  Add a gambit to your crew when you roll a 6 or critical on a risky action and you didn't spend a gambit on a bonus die.
+  <h2>Basics</h2>
+  <div class="m-1 p-1">
+    <h4>Gambits</h4>
+    Add a gambit to your crew when you roll a 6 or critical on a risky action and you didn't spend a gambit on a bonus die.
+  </div>
 
-  <h3>Playbooks</h3>
+  <h2>Playbooks</h2>
   <div class="m-1 p-1">
     <div v-for="(p,i) in playbooks">
       <button class="btn btn-light btn-block" type="button" data-toggle="collapse" :data-target="'#pb-'+i">
@@ -30,7 +34,7 @@ const ABOUT = `
     </div>
   </div>
 
-  <h3>Crews</h3>
+  <h2>Crews</h2>
   <div class="m-1 p-1">
     <button class="btn btn-light btn-block" type="button" data-toggle="collapse" data-target="#standardUpgrades">
       <h3 class="m-0" align="left">Common Upgrades</h3>
@@ -130,10 +134,16 @@ const ABOUT = `
         <bi>{{b[0]}}:</bi> {{b[1]}}.
       </div>  
     </div>
+
   </div>
 
-    <h3 class="m-0" align="left">Journeys Between Shards</h3>
-    <div id="journeys" class="p-1">
+  <h2>Jobs</h2>
+  <div class="m-1 p-1">
+
+    <button class="btn btn-light btn-block mb-2" type="button" data-toggle="collapse" data-target="#journeys">
+      <h3 class="m-0" align="left">Journeys Between Shards</h3>
+    </button>
+    <div id="journeys" class="collapse px-2">
       <p>Travelling between two <bi>shards</bi> is never a simple undertaking, there is always danger involved. 
       When undertaking a Journey, create a clock based upon the origin and destination. 
       <ul>
@@ -171,8 +181,19 @@ const ABOUT = `
           <li>Recouperate: Everyone may reduce one Harm by one Level.</li>
       </ul>
       Once you fill all the segments of the journey clock, you arrive at your destination shard. 
-      
     </div>
+
+    <button class="btn btn-light btn-block mb-2" type="button" data-toggle="collapse" data-target="#plans">
+      <h3 class="m-0" align="left">Planning & Engagement</h3>
+    </button>
+    <div id="plans" class="collapse px-2">
+      <ul>
+          <li v-for="p in plans"><bi>{{p[0]}}.</bi> {{p[1]}}</li>
+      </ul>
+    </div>
+
+  </div>
+  `+FACTIONHTML+`
 
 </div>
 `
@@ -202,7 +223,9 @@ const UI = (app)=>{
         gear : GEAR,
         bonds : BONDS,
         upgrades : CREWUPGRADES,
-        personnel : PERSONNEL
+        personnel : PERSONNEL,
+        plans : PLANS,
+        factions : FACTIONS
       }
     },
     methods : {
