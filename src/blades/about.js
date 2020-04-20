@@ -7,11 +7,13 @@ const ABOUT = `
 
   <h2>Basics</h2>
   <div class="m-1 p-1">
+    <p>The majority of the core FitD rules remain the same - with the exception of adding gambits. </p>
     <h4>Gambits</h4>
-    Add a gambit to your crew when you roll a 6 or critical on a risky action and you didn't spend a gambit on a bonus die.
+    Add a gambit to your crew when you roll a 6 or critical on a risky action and you didn't spend a gambit on a bonus die. 
+    You can spend gambits in place of stress - one for one [<em>credit: Scum & Villainy</em>]. 
   </div>
 
-  <h2>Playbooks</h2>
+  <h2>Characters</h2>
   <div class="m-1 p-1">
     <div v-for="(p,i) in playbooks">
       <button class="btn btn-light btn-block" type="button" data-toggle="collapse" :data-target="'#pb-'+i">
@@ -127,9 +129,12 @@ const ABOUT = `
       <h3 class="m-0" align="left">Crew Bonds</h3>
     </button>
     <div id="standardBonds" class="px-2 collapse">
-      Instead of claims, crews in the Outlands form bonds with communities - lasting connections
+      <p>Instead of claims, crews in the Outlands form bonds with communities - lasting connections
       to the people that they help. It is a freeform list - your crew can seek out any bond at any time.
-      Creating a bond almost always requires a special mission/job. 
+      Creating a bond almost always requires a special mission/job and you may have to face off against another 
+      faction to forge a bond. You sould only be able to forge 1 bond with a 
+      shard / community. However, if the shard has a large population, more may be possible. Bonds are precious, 
+      and you should make every effort to protect them from other factons.   </p>
       <div v-for="b in bonds">
         <bi>{{b[0]}}:</bi> {{b[1]}}.
       </div>  
@@ -187,6 +192,7 @@ const ABOUT = `
       <h3 class="m-0" align="left">Planning & Engagement</h3>
     </button>
     <div id="plans" class="collapse px-2">
+      Engagement remains the same. The plans that a crew can use are as follows:
       <ul>
           <li v-for="p in plans"><bi>{{p[0]}}.</bi> {{p[1]}}</li>
       </ul>

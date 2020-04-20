@@ -41,6 +41,7 @@ import {SHORTBLOCK,getBlockData} from "./monster-statblock-osr.js"
 const forceHTML = SHORTBLOCK
 
 const data = FACTIONS.filter(f=>show.includes(f.id)).map(faction => {
+  let id = faction.id
   //look for forces
   faction.forces = []
   if (FORCES[id]) {
