@@ -1,5 +1,4 @@
 import {PCPLAYBOOKS,CREWPLAYBOOKS,GEAR,BONDS,CREWUPGRADES,PERSONNEL,PLANS} from "./playbooks.js"
-import {FACTIONS,HTML as FACTIONHTML} from "./factions.js"
 
 const ABOUT = `
 <div class="p-1 m-1" align="left">
@@ -199,8 +198,6 @@ const ABOUT = `
     </div>
 
   </div>
-  `+FACTIONHTML+`
-
 </div>
 `
 const alphaSort = (a,b) => {
@@ -231,7 +228,6 @@ const UI = (app)=>{
         upgrades : CREWUPGRADES,
         personnel : PERSONNEL,
         plans : PLANS,
-        factions : FACTIONS
       }
     },
     methods : {

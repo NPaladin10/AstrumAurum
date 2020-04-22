@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <title>Astrum Aurum</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Aclonica">
+    <link rel="stylesheet" type="text/css" href="lib/noty.3.1.4.min.css">
+    <link rel="stylesheet" type="text/css" href="lib/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="src/main.css">
+  </head>
+  <body>
+    <div id="ui-main" class="w-100" align="center">
+      <!--MENU---------------------------------------------->
+      <div class="d-flex justify-content-between m-1" style="z-index:100">
+        <div>
+          <h1>Astrum Aurum</h1>
+        </div>
+        <div class="d-flex flex-row-reverse">
+          <div class="m-2">
+            <a class="btn btn-info btn-sm" data-toggle="collapse" href="#menu-list" role="button">
+              <img src="media/md-menu.svg" height="20" width="20">
+            </a>
+          </div>
+          <div class="card collapse" id="menu-list" style="position: absolute;width:200px;right:50px;z-index:100">
+            <div class="card card-body p-1">
+              <a type="button" class="btn btn-block btn-info" :href="link[0]" v-for="link in siteLinks">{{link[1]}}</a>
+              <a type="button" class="btn btn-block btn-info mt-3" href="index.html">Astrum Aurum</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--END MENU---------------------------------------------->
+      <div class="m-2">
+        <h2 align="left">Factions</h2>
+        <div class="m-1 p-1" align="left" v-for="(F,i) in factions">
+          <button class="btn btn-light btn-block" type="button" data-toggle="collapse" :data-target="'#f-'+i">
+            <h2 class="m-0" align="left">{{F.name}}</h2>
+          </button>
+          <div :id="'f-'+i" class="collapse px-2">
+            <div v-html="F.info"></div>
+            <h4 align="center" v-if="F.fronts">{{F.name}} Fronts</h4>
+            <div class="container table-gen my-2" v-if="F.fronts">
+              <div class="row table-gen">
+                <div class="col">Roll (d20)</div>
+                <div class="col">Front</div>
+              </div>
+              <div v-for="(f,i) in F.fronts" class="row table-gen">
+                <div class="col-2">{{F.frontsP[i]}}</div>
+                <div class="col">
+                  {{f.front}} <em>(impulse: {{f.impulse}})</em>
+                </div>
+              </div>
+            </div>
+            <h4 align="center">
+              <span>Forces</span>
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-info" data-toggle="collapse" :data-target="'#OSR-'+i">OSR</button>
+                <button type="button" class="btn btn-info" data-toggle="collapse" :data-target="'#FitD-'+i">FitD</button>
+              </div>
+            </h4>
+            <!--FitD---------------------------------------------->
+            <div :id="'FitD-'+i" class="container table-gen collapse" v-cloak>
+              <div class="row table-gen">
+                <div class="col-2">Name</div>
+                <div class="col">About</div>
+              </div>
+              <div v-for="(tier,j) in F.forcesFitD" v-if="tier.length>0">
+                <div class="row border border-dark">
+                  <div class="col" align="center">
+                    <b>Tier {{j+1}}</b>
+                  </div>
+                </div>
+                <div v-for="t in tier" class="row table-gen">
+                  <div class="col-2">{{t[1]}}</div>
+                  <div class="col">{{t[2]}}</div>
+                </div>
+              </div>
+            </div>
+            <!--END FitD---------------------------------------------->
+            <div :id="'OSR-'+i" class="container collapse" align="center">
+              <monster-short v-if="f.lv" :M="f" v-for="f in F.forcesOSR"></monster-short>
+            </div>
+            <!--END OSR---------------------------------------------->
+          </div>
+        </div>
+        <!--END FACTION---------------------------------------------->
+        <div class="border p-1 m-1">
+          <h3 align="left">Faction Front Plots</h3>
+          <div v-for="fp in frontPlots" align="center" class="mb-4">
+            <h4>{{fp.id}} Plots</h4>
+            <div class="font-weight-bold">Plots for: {{frontTypes[fp.id].join(', ')}}</div>
+            <div class="container table-gen">
+              <div class="row table-gen">
+                <div class="col-2">Roll (1d12)</div>
+                <div class="col">Plot</div>
+              </div>
+              <div v-for="p in fp.plots" class="row table-gen">
+                <div class="col-2">{{p[0]}}</div>
+                <div class="col">{{p[1]}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  </body>
+  <script src="lib/vue.2.5.16.min.js"></script>
+  <script src="lib/popper.1.12.3.min.js"></script>
+  <script src="lib/jquery-3.3.1.min.js"></script>
+  <script src="lib/bootstrap.min.js"></script>
+  <script type="module" src="src/factions/main.js"></script>
+</html>
