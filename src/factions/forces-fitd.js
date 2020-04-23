@@ -8,7 +8,9 @@ const FORCES = {
     [2,"Water Elemental","Large (scale 2), body of water, powerful slams."],
     [3,"Aboleth Initiate","Large (scale 2), multiple tentacles (skum disease infection), spellcaster: enslave, polymorph and pain."],
   ],
-  "archons": null,
+  "archons": [
+    [1,"Lantern","Small (scale 0), flying, radiant blast."],
+  ],
   "asgard": null,
   "blackflame": [
     [1,"Magma Mephit","Small (scale 0), flying, drips magma."],
@@ -19,10 +21,18 @@ const FORCES = {
     [2,"Fire Elemental","Large (scale 2), a body made of flame, blasts of fire."],
     [3,"Fire Elemental Myrmidon","Large (scale 2), a body made of flame, obsidian armor and sword, skilled melee."],
   ], //"Fire Giant Dreadnought,Eternal Flame Guardian,Eternal Flame Priest,Magmin",
-  "bloodtiamat": null,
+  "bloodtiamat": [
+    [1,"Dragon-kin Soldier",""]
+    [2,"Flame Dragon","Huge (scale 3)"],
+  ],
   "deva": null,
-  "fae": null, //"Dryad,Sprite,Pixie,Nereid,Druid,Vine Blight,Lion,Eagle",
-  "gaolarch": null,
+  "fae": [
+    [1,"Genasi",""],
+    [2,"Fae",""],
+  ], 
+  "gaolarch": [
+    [3,"Inevitable","Large (scale 2),"],
+  ],
   "goblyns": [
     [1,"Goblyn","Small (scale 0), elemental nature, agile, claws."],
     [1,"Mephit","Small (scale 0), elemental nature, agile, claws, flying."],
@@ -30,9 +40,33 @@ const FORCES = {
     [2,"Goblyn Boss","Elemental nature, cunning, tough, regenerates."],
     [2,"Troll","Large (scale 2), elemental nature, strong, regenerates."],
   ], 
-  "guardians": null, //"Sword Guardian,Shield Guardian,Crown Guardian",
-  "jadeempire": null, //"Light Jade Automaton,Jade Guard,Remote Sentry,Earth Shaper,Water Shaper,Fire Shaper,Wind Shaper,Forest Shaper",
-  "mechan": null,
+  "guardians": [
+    [1,"Sword Guardian Initiate",""],
+    [1,"Shield Guardian Initiate",""],
+    [1,"Crown Guardian Initiate",""],
+    [2,"Sword Guardian",""],
+    [2,"Shield Guardian",""],
+    [2,"Crown Guardian",""],
+    [3,"Sword Guardian Master",""],
+    [3,"Shield Guardian Master",""],
+    [3,"Crown Guardian Master",""],
+  ], 
+  "jadeempire": [
+    [1,"Light Jade Automaton",""],
+    [1,"Jade Guard",""],
+    [1,"Remote Sentry",""],
+    [2,"Earth Shaper",""],
+    [2,"Water Shaper",""],
+    [2,"Fire Shaper",""],
+    [2,"Wind Shaper",""],
+    [2,"Forest Shaper",""],
+  ], 
+  "mechan": [
+    [1,"Orb Sentry","Small (scale 0),"],
+    [1,"Mechan Techwright",""],
+    [2,"Mechan Knight","Large (scale 2),"],
+    [3,"Mechan Warframe","Huge (scale 3),"],
+  ],
   "myr": [
     [1,"Myr Shadow","Amorphous, blend into shadow, necrotic damage, resistant to physical and energy attacks, weakness: fire / radiant."],
     [1,"Myr Wolf","Agile, bite, resistant to physical and energy attacks, weakness: fire / radiant."],
@@ -45,7 +79,11 @@ const FORCES = {
   ], 
   "olympian": null,
   "platinumstar": null,
-  "sect": null,
+  "sect": [
+    [1,"Sect Swarm","Large (scale 2), swarm"],
+    [1,"Iron Centipede",""],
+    [2,"Steel Scorpion",""],
+  ],
   "shadowsteel": [
     [1,"Gray Shadow","Amorphous, blend into shadow, necrotic damage, resistant to physical and energy attacks, weakness: cold."],
     [1,"Gray Hound","Bite (knockdown), resistant to physical attacks."],
@@ -78,12 +116,16 @@ const FORCES = {
     [3,"Faceless Primus","Arc sword, arc rifle, leader, hardy."]
   ],
   "xaoti": null,
-  "warden": null, //"Ranger,Wilder,Zverhai",
+  "warden": [
+    [1,"Ranger",""],
+    [2,"Wilder",""],
+    [3,"Zverhai",""],
+  ], 
   "worm": null,
   "yuloth": [
       [1,"Merc","Laser rifle, grenades."],
       [1,"Gun Drone","Small (scale 0), flying, laser rifle."],
-      [3,"Yuloth Evkoker","Flamestaff (fire), spellcaster: blast, telekinesis, flight, shield, wall of force."],
+      [3,"Yuloth Evoker","Flamestaff (fire), spellcaster: blast, telekinesis, flight, shield, wall of force."],
   ], 
 }
 
