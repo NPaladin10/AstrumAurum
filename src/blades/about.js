@@ -1,3 +1,22 @@
+import {factions as FACTIONS} from "../factions/factions.js"
+import {GEAR as fGear, GEARABV} from "../factions/gear-fitd.js"
+import {FORCES} from "../factions/forces-fitd.js"
+
+//handle faction specific information
+let factions = FACTIONS.map(F => {
+  let forces = FORCES[F.id] ? [[],[],[],[],[]] : null
+  if(FORCES[F.id]) {
+    FORCES[F.id].forEach(f => forces[f[0]-1].push(f))  
+  }
+  
+  return {
+    name : F.name,
+    gear : fGear[F.id],
+    forces 
+  }
+})
+
+
 import {PCPLAYBOOKS,CREWPLAYBOOKS,GEAR,BONDS,CREWUPGRADES,PERSONNEL,PLANS} from "./playbooks.js"
 
 const ABOUT = `
@@ -6,14 +25,45 @@ const ABOUT = `
 
   <h2>Basics</h2>
   <div class="m-1 p-1">
-    <p>The majority of the core FitD rules remain the same - with the exception of adding gambits. </p>
-    <h4>Gambits</h4>
-    Add a gambit to your crew when you roll a 6 or critical on a risky action and you didn't spend a gambit on a bonus die. 
-    You can spend gambits in place of stress - one for one [<em>credit: Scum & Villainy</em>]. 
+    <p>The majority of the core FitD rules remain the same - with the exception of adding luck. </p>
+    <h4>Luck</h4>
+    Add luck to your crew when you roll a 6 or critical on a risky action and you didn't spend luck on a bonus die. 
+    You can spend luck in place of stress - one for one [<em>credit: Scum & Villainy</em>]. 
   </div>
 
   <h2>Characters</h2>
   <div class="m-1 p-1">
+    <button class="btn btn-light btn-block mb-2" type="button" data-toggle="collapse" data-target="#standardGear">
+      <h3 class="m-0" align="left">Gear</h3>
+    </button>
+    <div id="standardGear" class="px-2 collapse">
+      <h4 align="left">Standard Gear</h4>
+      <div v-for="g in gear">
+        <bi>{{g[0]}}:</bi> {{g[1]}} [{{g[2]}} load]
+      </div>  
+      <h4 class="mt-2" align="left">Faction Gear</h4>
+      <div class="container table-gen mb-2" align="center">
+        <div class="row table-gen">
+          <div class="col" align="left">Name</div>
+          <div class="col">Tier</div>
+          <div class="col">What</div>
+          <div class="col">Load</div>
+          <div class="col" align="left">Tags</div>
+        </div>
+        <div v-for="f in factions">
+          <div class="row table-gen" v-if="f.gear">
+            <div class="col" align="left">{{f.name}}</div>
+          </div>
+          <div class="row table-gen" v-for="g in f.gear">
+            <div class="col" align="left">{{g[2]}}</div>
+            <div class="col">{{g[0]}}</div>
+            <div class="col">{{gearAbv[g[1]]}}</div>
+            <div class="col">{{g[3]}}</div>
+            <div class="col" align="left"><span v-if="g[4]">{{g[4].split(',').join(', ')}}</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div v-for="(p,i) in playbooks">
       <button class="btn btn-light btn-block" type="button" data-toggle="collapse" :data-target="'#pb-'+i">
         <h3 class="m-0" align="left">{{p.name}}</h3>
@@ -24,14 +74,6 @@ const ABOUT = `
         <h5>Gear</h5>
         <div v-for="g in p.gear" class="px-2">{{g.name}} [{{g.load}} Load]</div>
       </div>
-    </div>
-    <button class="btn btn-light btn-block mt-2" type="button" data-toggle="collapse" data-target="#standardGear">
-      <h3 class="m-0" align="left">Standard Gear</h3>
-    </button>
-    <div id="standardGear" class="px-2 collapse">
-      <div v-for="g in gear">
-        <bi>{{g[0]}}:</bi> {{g[1]}} [{{g[2]}} load]
-      </div>  
     </div>
   </div>
 
@@ -47,7 +89,7 @@ const ABOUT = `
       </div>  
     </div>
 
-    <button class="btn btn-light btn-block mb-2" type="button" data-toggle="collapse" data-target="#personnel">
+    <button class="btn btn-light btn-block" type="button" data-toggle="collapse" data-target="#personnel">
       <h3 class="m-0" align="left">Personnel</h3>
     </button>
     <div id="personnel" class="px-2 pb-2 collapse">
@@ -110,21 +152,9 @@ const ABOUT = `
       <p>If personnel is destroyed, it may be replaced. Spend coin equal to your Tier +2
       to restore it, plus two downtime activities to recruit new group members, or hire
       a new expert.</p>
-
     </div>
 
-    <div v-for="(p,i) in crews">
-      <button class="btn btn-light btn-block" type="button" data-toggle="collapse" :data-target="'#crew-'+i">
-        <h3 class="m-0" align="left">{{p.name}}</h3>
-      </button>
-      <div :id="'crew-'+i" class="collapse px-2">
-        <h5>Abilities</h5>
-        <div v-for="a in p.abilities" class="px-2"><bi>{{a.name}}:</bi> {{a.text}}</div>
-        <h5>Upgrades</h5>
-        <div v-for="u in p.upgrades" class="px-2"><bi>{{u[0]}}</bi><span v-if="u[1]">: {{u[1]}}</span></div>
-      </div>
-    </div>
-    <button class="btn btn-light btn-block mt-2" type="button" data-toggle="collapse" data-target="#standardBonds">
+    <button class="btn btn-light btn-block mb-2" type="button" data-toggle="collapse" data-target="#standardBonds">
       <h3 class="m-0" align="left">Crew Bonds</h3>
     </button>
     <div id="standardBonds" class="px-2 collapse">
@@ -137,6 +167,18 @@ const ABOUT = `
       <div v-for="b in bonds">
         <bi>{{b[0]}}:</bi> {{b[1]}}.
       </div>  
+    </div>
+
+    <div v-for="(p,i) in crews">
+      <button class="btn btn-light btn-block" type="button" data-toggle="collapse" :data-target="'#crew-'+i">
+        <h3 class="m-0" align="left">{{p.name}}</h3>
+      </button>
+      <div :id="'crew-'+i" class="collapse px-2">
+        <h5>Abilities</h5>
+        <div v-for="a in p.abilities" class="px-2"><bi>{{a.name}}:</bi> {{a.text}}</div>
+        <h5>Upgrades</h5>
+        <div v-for="u in p.upgrades" class="px-2"><bi>{{u[0]}}</bi><span v-if="u[1]">: {{u[1]}}</span></div>
+      </div>
     </div>
 
   </div>
@@ -198,6 +240,33 @@ const ABOUT = `
     </div>
 
   </div>
+
+  <h2>Faction Forces</h2>
+  <div class="m-1 p-1">
+    <div v-for="(f,i) in factions" v-if="f.forces">
+      <button class="btn btn-light btn-block" type="button" data-toggle="collapse" :data-target="'#ff-'+i">
+        <h3 class="m-0" align="left">{{f.name}}</h3>
+      </button>
+      <div :id="'ff-'+i" class="container table-gen collapse my-2" v-cloak>
+        <div class="row table-gen">
+          <div class="col-2">Name</div>
+          <div class="col">About</div>
+        </div>
+        <div v-for="(tier,j) in f.forces" v-if="tier.length>0">
+          <div class="row border border-dark">
+            <div class="col" align="center">
+              <b>Tier {{j+1}}</b>
+            </div>
+          </div>
+          <div v-for="t in tier" class="row table-gen">
+            <div class="col-2">{{t[1]}}</div>
+            <div class="col">{{t[2]}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
 </div>
 `
 const alphaSort = (a,b) => {
@@ -228,6 +297,8 @@ const UI = (app)=>{
         upgrades : CREWUPGRADES,
         personnel : PERSONNEL,
         plans : PLANS,
+        factions,
+        gearAbv : GEARABV
       }
     },
     methods : {

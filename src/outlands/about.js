@@ -1,3 +1,4 @@
+import {JOBS} from "./jobs.js"
 import {tables} from "./generatorTables.js"
 import {data as settingData} from "./shards-core.js"
 import * as shardData from "./shards-data.js"
@@ -304,8 +305,29 @@ const generators = `
     <p></p>
     </div>
 
-    
+    <div class="border p-1 m-1">
+      <h3>Jobs</h3>
+      
+      <h4 align="center">Client/Target</h4>
+      <div class="container table-gen" align="center">
+        <div class="row">
+          <div class="col table-gen" v-for="type in jobs.clients">
+            <div v-for="c in type">{{c}}</div>
+          </div>
+        </div>
+      </div>
+
+      <h4 class="mt-2" align="center">Work</h4>
+      <div class="container table-gen" align="center">
+        <div class="row">
+          <div class="col table-gen" v-for="type in jobs.work">
+            <div v-for="w in type">{{w}}</div>
+          </div>
+        </div>
+      </div>
     </div>
+    
+  </div>
 </div>
 `
 
@@ -382,6 +404,7 @@ const UI = (app)=>{
     template: generators,
     data: function() {
       return {
+        jobs : JOBS
       }
     },
   })

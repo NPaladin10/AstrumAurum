@@ -22,7 +22,7 @@ const FORCES = {
     [3,"Fire Elemental Myrmidon","Large (scale 2), a body made of flame, obsidian armor and sword, skilled melee."],
   ], //"Fire Giant Dreadnought,Eternal Flame Guardian,Eternal Flame Priest,Magmin",
   "bloodtiamat": [
-    [1,"Dragon-kin Soldier",""]
+    [1,"Dragon-kin Soldier",""],
     [2,"Flame Dragon","Huge (scale 3)"],
   ],
   "deva": null,
