@@ -21,7 +21,11 @@ import {PCPLAYBOOKS,CREWPLAYBOOKS,GEAR,BONDS,CREWUPGRADES,PERSONNEL,PLANS} from 
 
 const ABOUT = `
 <div class="p-1 m-1" align="left">
-  <p>This is a Forged in the Dark adaptation of Planescape style planehopping adventure.</p>
+  <p>This is a Forged in the Dark adaptation of Planescape style guild intrigue and planehopping adventure.
+  Your characters are not ruffians or rogues but brave entrepreneurs (*adventurers*) who have just established 
+  their own guild. You will perform jobs to grow the guild and its reputation.  
+  </p>
+  <p>It draws heavily on <em>Blades in the Dark</em>, but also <em>Wicked Ones</em>, and the <em>Typhoon Atolls</em></p>
 
   <h2>Basics</h2>
   <div class="m-1 p-1">
@@ -77,8 +81,21 @@ const ABOUT = `
     </div>
   </div>
 
-  <h2>Crews</h2>
+  <h2>Guilds</h2>
   <div class="m-1 p-1">
+    <p>Your guild is your crew. It isn't a secretive band (unless you choose the Shadows), but an intentionally public one. 
+    Part business, part society, your goal is to make it thrive so that everyone in the Outlands 
+    knows its name and seeks its services. What service do you provide?  
+    </p>
+    <p>
+      When creating your guild, select a shard where its headquarters is located. 
+      It always starts as a small affair, but through hard work it will grow. 
+      The key way to grow your guild is by establishing trades – a capability that you are known for. 
+      Establishing a trade takes time and resources. Time is the easiest factor – 
+      you spend a downtime activity on building the trade. The resource half is the complicated part, 
+      it takes more than coin, and a trade requires specialized tools, knowledge and/or personnel. 
+      The only way to obtain these key resources is by doing a job to obtain them.    
+    </p>
     <button class="btn btn-light btn-block" type="button" data-toggle="collapse" data-target="#standardUpgrades">
       <h3 class="m-0" align="left">Common Upgrades</h3>
     </button>
@@ -89,7 +106,7 @@ const ABOUT = `
       </div>  
     </div>
 
-    <button class="btn btn-light btn-block" type="button" data-toggle="collapse" data-target="#personnel">
+    <button class="btn btn-light btn-block mb-2" type="button" data-toggle="collapse" data-target="#personnel">
       <h3 class="m-0" align="left">Personnel</h3>
     </button>
     <div id="personnel" class="px-2 pb-2 collapse">
@@ -154,28 +171,15 @@ const ABOUT = `
       a new expert.</p>
     </div>
 
-    <button class="btn btn-light btn-block mb-2" type="button" data-toggle="collapse" data-target="#standardBonds">
-      <h3 class="m-0" align="left">Crew Bonds</h3>
-    </button>
-    <div id="standardBonds" class="px-2 collapse">
-      <p>Instead of claims, crews in the Outlands form bonds with communities - lasting connections
-      to the people that they help. It is a freeform list - your crew can seek out any bond at any time.
-      Creating a bond almost always requires a special mission/job and you may have to face off against another 
-      faction to forge a bond. You sould only be able to forge 1 bond with a 
-      shard / community. However, if the shard has a large population, more may be possible. Bonds are precious, 
-      and you should make every effort to protect them from other factons.   </p>
-      <div v-for="b in bonds">
-        <bi>{{b[0]}}:</bi> {{b[1]}}.
-      </div>  
-    </div>
-
     <div v-for="(p,i) in crews">
       <button class="btn btn-light btn-block" type="button" data-toggle="collapse" :data-target="'#crew-'+i">
         <h3 class="m-0" align="left">{{p.name}}</h3>
+        <h5 class="mx-1" align="left">{{p.short}}</h5>
       </button>
       <div :id="'crew-'+i" class="collapse px-2">
-        <h5>Abilities</h5>
-        <div v-for="a in p.abilities" class="px-2"><bi>{{a.name}}:</bi> {{a.text}}</div>
+        <p>{{p.about}}</p>
+        <h5>Trades</h5>
+        <div v-for="a in p.trades" class="px-2"><bi>{{a.name}}:</bi> {{a.text}}</div>
         <h5>Upgrades</h5>
         <div v-for="u in p.upgrades" class="px-2"><bi>{{u[0]}}</bi><span v-if="u[1]">: {{u[1]}}</span></div>
       </div>

@@ -464,114 +464,323 @@ Veteran: Choose a special ability from another crew.
 */
 
 const CREWPLAYBOOKS = {
-  "Hawks": {
-    "name": "Hawks",
-    "xp" : "Win a battle, protect a location, track down a quarry, or clear a dangerous site.",
-    "abilities": [{
-      "name": "Dangerous",
-      "text": `Each PC may add +1 action rating to Hunt, Skirmish, or Wreck (up to a max rating of 3).`,
+  "Enclave": {
+    "name": "Enclave",
+    "short" : "Tapping into the Arcane",
+    "about" : `An enclave is infused with magic, housing denizens who dabble heavily in the arcane. 
+      Magic lingers in the air, runes are scrawled on the walls, and even the basic personnel may have some level of magical aptitude.
+      The sites and trades of an enclave are focused on the arcane, giving magical bonuses and abilities to its inhabitants. `,
+    "special" : `Guards and Wards. Establish an area around your HQ and gain arcane power within it (choose 3):  
+      weather control - magical sentries - mindlink - dark whispers - living plants - illusions - corrupted wildlife. 
+      Roll your tier as a fortune roll to determine their effect as a trap, trick, or spell.`,
+    "xp" : "Acquire a relic, clean a contaminated site, catalog a cosmic source, or have a technical breakthrough.",
+    "trades": [{
+      "name": "Academy",
+      "text": `All personnel add Invoke as an action. Choose a path of magic that they can cast. 
+      If they already have Invoke, they instead gain the adept edge.`,
     },{
-      "name": "Blood Brothers",
-      "text": `When you fight alongside your cohorts in combat, they get +1d for teamwork rolls (setup and group actions). All of your cohorts get the Thugs type for free (if they're already Thugs, add another type).`,
+      "name": "Arcane Rigging",
+      "text": `You get 2 free load of arcane implements.`,
     },{
-      "name": "Door Kickers",
-      "text": `When you execute an assault plan, take +1d to the engagement roll.`,
+      "name": "Bestiary",
+      "text": `You always have fresh mounts, which come with an edge (choose one): aquatic - armored - fast - 
+        flying - intelligent - magical - terrifying. Your mount can help out on a roll, but you risk losing it.`,
     },{
-      "name": "Fiends",
-      "text": `Fear is as good as respect. You may count each wanted level as if it was turf.`,
+      "name": "Crucible",
+      "text": `You can pay cost to push you personnel into making a magic item. 
+      Roll dice depending on the cost - light gives 1d, medium gives 2d, and heavy gives 3d. 
+      Failure: Tier 1, volatile, Mixed: Tier 1, Success:  Tier 2, Critical: Tier 3.`,
     },{
-      "name": "Forged in the Fire",
-      "text": `Each PC has been toughened by experience. You get +1d to resistance rolls.`,
+      "name": "Extensive Curriculum",
+      "text": `Each PC may add +1 action rating to Study, Attune, or Sway (up to a max rating of 3). 
+      Each player may choose the action they prefer (you don’t all have to choose the same one). 
+      If you take this ability during initial character and guild creation, it supersedes the normal starting limit for action ratings.`,
     },{
-      "name": "War Dogs",
-      "text": `When you’re at war (-3 faction status), your crew does not suffer -1 hold and PCs still get two downtime activities, instead of just one.`,
+      "name": "Gardens",
+      "text": `You can pay a cost to have the mystical plants produce a potion of your 
+      choice equal to the cost's tier or a limited supply of organic goods.`,
+    },{
+      "name": "Infirmary",
+      "text": `You have an established infirmary and professional doctors. You take +1d to healing rolls.`,
+    },{
+      "name": "Lexicon of Ways",
+      "text": `You have accumulated a massive collection of Ways. When undertaking a Journey 
+        in your Realm you always know a way connecting the origin and destination. 
+        This may be taken a second time and the PCs take +1d on challenges made during a Journey.`,
+    },{
+      "name": "Library",
+      "text": `You take +1d to gather information when you use the library to look up information and always 
+      have a source of arcane knowledge. You can always flashback to gathering information here.`,
+    },{
+      "name": "Potion Lab",
+      "text": `Choose a single magic path. You always have a supply of any tier 1 potion and a single 
+      tier 2 potion of that path. The tier 2 potion is the same for everyone and chosen when the trade is established.`,
+    },{
+      "name": "Quality Documents",
+      "text": `Your PCs documents have the quality tag.`,
+    },{
+      "name": "Quality Implements",
+      "text": `Your PCs arcane implements have the quality tag.`,
+    },{
+      "name": "Scrying Pool",
+      "text": `You can pay light cost to see any location in your region. You take +1d on your next roll when you apply what you saw.`,
+    },{
+      "name": "Supernatural Warding",
+      "text": `You specialize in defense against supernatural trouble. 
+        You gain +1d to resistance rolls against supernatural threats. You get +1d to healing rolls when you have supernatural harm.`,
+    },{
+      "name": "Vehicle Bay",
+      "text": `You have a vehicle that your personnel upkeep (choose one): 
+        gas sub - hot air balloon - horseless cart. It has edges (choose two): armored - 
+        dependable - camouflaged - fast - nimble.  It also has a flaw (choose one): clumsy - 
+        distinct - noisy - rickety - slow. The vehicle is fully repaired or rebuilt each recovery.`,
     }],
-    "upgrades" : ["Bravos rigging:2 free load of weapons or armor","Ironhook Contacts:+1 Tier in prison","Elite Rovers","Elite Thugs","Hardened:+1 trauma box"]
+    "upgrades" : []
   },
-  "Merchants": {
-    "name": "Merchants",
-    "xp" : "Acquire product supply, execute a high-profile sale, or secure new territory.",
-    "abilities": [{
-      "name": "Silver Tongues",
-      "text": `Each PC may add +1 action rating to Command, Consort, or Sway (up to a max rating of 3).`,
+  "Forge": {
+    "name": "Forge",
+    "short" : "Harnessing the Power of Industry",
+    "about" : `A forge is built for production - crazy inventions, factories, steamworks, and alchemicals can be found on site. 
+      Problems are approached with ingenuity, eagerness, and a keen disregard for danger. A forge always has a source of power - 
+      perhaps it is a volcano, or it contains a giant steamworks, or harnesses the power of mighty river.`,
+    "special" : `Your HQ has a power track. Each downtime, you gain power equal to 1 + tier. 
+      Any player can spend these to take +1d on a downtime activity.`,
+    "xp" : "Acquire a relic, clean a contaminated site, catalog a cosmic source, or have a technical breakthrough.",
+    "trades": [{
+      "name": "Alchemist Lab",
+      "text": `You always have a supply of any tier 1 alchemical. 
+        You can also pay 1 gold to acquire a single tier 2 alchemical.`,
     },{
-      "name": "Accord",
-      "text": `Sometimes friends are as good as territory. You may count up to three +3 faction statuses you hold as if they are turf.`,
+      "name": "Always the Right Tool",
+      "text": `You get 2 free load of tools.`,
     },{
-      "name": "The Good Stuff",
-      "text": `Your merchandise is exquisite. The product quality is equal to your Tier+2. When you deal with a crew or faction, the GM will tell you who among them is hooked on your product (one, a few, many, or all).`,
+      "name": "Break Room",
+      "text": `You take +1d on calamity rolls and can pay light cost to automatically recruit the following minion types: 
+      alchemists - workers.`,
     },{
-      "name": "Cosmic Market",
-      "text": `Through hard-won experience, you have a market with a Cosmic Faction. They do not pay in coin. What do they pay with?`,
+      "name": "Engineering Labs",
+      "text": `Each PC may add +1 action rating to Study, Wreck, or Tinker (up to a max rating of 3). 
+      Each player may choose the action they prefer (you don’t all have to choose the same one). 
+      If you take this ability during initial character and guild creation, it supersedes the normal starting limit for action ratings.`,
     },{
-      "name": "High Society",
-      "text": `It's all about who you know. Take -1 heat during downtime and +1d to gather info about the city's elite.`,
+      "name": "Factory",
+      "text": `Your personnel make some contraption every downtime phase. 
+        Roll your tier to determine its quality. 
+        Failure: Fun, but practically useless item, Mixed: Tier 1, Success:  Tier 2, Critical: Tier 3.`,
     },{
-      "name": "Hooked",
-      "text": `Your gang members use your product. Add the savage, unreliable, or wild flaw to your gangs to give them +1 quality.`,
+      "name": "Mines",
+      "text": `You have a mine entrance with a large mineshaft extending away from it. 
+        You take +2d on discovery rolls and can make an immediate discovery roll when this trade is created.`,
+    },{
+      "name": "Quality Documents",
+      "text": `Your PCs documents have the quality tag.`,
+    },{
+      "name": "Quality Tools",
+      "text": `Your PCs tools have the quality tag.`,
+    },{
+      "name": "Test Chamber",
+      "text": `You can make personnel take a contraption into the chamber and test it out. 
+        Roll your tier to determine what happens. Failure: The minion gets crushed, 
+        Mixed: Remove its volatility, Success: Add an edge, Critical: Add two edges.`,
+    },{
+      "name": "Vehicle Bay",
+      "text": `You have a vehicle that your personnel upkeep (choose one): 
+        gas sub - hot air balloon - horseless cart. It has edges (choose two): armored - 
+        dependable - camouflaged - fast - nimble.  It also has a flaw (choose one): clumsy - 
+        distinct - noisy - rickety - slow. The vehicle is fully repaired or rebuilt each recovery.`,
+    },{
+      "name": "Workshop",
+      "text": `All personnel add Tinker as an action. If they already have Tinker, they instead gain the crafty edge.`,
+    },{
+      "name": "Warehouses",
+      "text": `Stockpiles give you +1d to acquire assets.`,
+    },{
+      "name": "Side Business",
+      "text": `You have an established business. What devices or creations do you sell? 
+        Roll your tier minus the threat of the region. You earn that much coin in downtime.`,
+    },],
+    "upgrades" : []
+  },
+  "Grand Bazaar": {
+    "name": "Grand Bazaar",
+    "short" : "Merchandise from across the Outlands",
+    "about" : ``,
+    "special" : ``,
+    "xp" : "",
+    "trades": [{
+      "name": "Bestiary",
+      "text": `You always have fresh mounts, which come with an edge (choose one): aquatic - armored - fast - 
+        flying - intelligent - magical - terrifying. Your mount can help out on a roll, but you risk losing it.`,
+    },{
+      "name": "Empathic Arts",
+      "text": `Each PC may add +1 action rating to Command, Consort, or Sway (up to a max rating of 3). 
+      Each player may choose the action they prefer (you don’t all have to choose the same one). 
+      If you take this ability during initial character and guild creation, it supersedes the normal starting limit for action ratings.`,
+    },{
+      "name": "Gift Giver",
+      "text": `You get 2 free load of luxury gifts.`,
+    },{
+      "name": "Infirmary",
+      "text": `You have an established infirmary and professional doctors. You take +1d to healing rolls.`,
+    },{
+      "name": "Lexicon of Ways",
+      "text": `You have accumulated a massive collection of Ways. When undertaking a Journey 
+        in your Realm you always know a way connecting the origin and destination. 
+        This may be taken a second time and the PCs take +1d on challenges made during a Journey.`,
+    },{
+      "name": "Personal Clothier",
+      "text": `+1d engagement roll for social plans.`,
+    },{
+      "name": "Quality Documents",
+      "text": `Your PCs documents have the quality tag.`,
+    },{
+      "name": "Quality Luxury Goods",
+      "text": `Your PCs luxury goods have the quality tag.`,
+    },{
+      "name": "Side Business",
+      "text": `You have an established business. What wonders do you sell? 
+        Roll your tier minus the threat of the region. You earn that much coin in downtime.`,
+    },{
+      "name": "Surplus Caches",
+      "text": `+2 coin for for product sale or supply.`,
+    },{
+      "name": "Luxury Venue",
+      "text": `+1d to Consort and Sway on site.`,
+    },{
+      "name": "Warehouses",
+      "text": `Stockpiles give you +1d to acquire assets.`,
     }],
-    "upgrades" : ["Merchants' rigging:1 carried item is concealed and has no load","Ironhook Contacts:+1 Tier in prison","Elite Rooks","Elite Thugs","Composed:+1 stress box"]
+    "upgrades" : []
   },
-  "Shadows": {
-    "name": "Shadows",
-    "xp" : "Execute a successful espionage operation, delve unseen, conduct an act of sabotage, or commit a theft.",
-    "abilities": [{
-      "name": "Everyone Steals",
-      "text": `Each PC may add +1 action rating to Prowl, Finesse, or Tinker (up to a max rating of 3).`,
+  "Hideout": {
+    "name": "Hideout",
+    "short" : "Espionage and Clandestine Acquisition",
+    "about" : `A hideout is a place to lay low and try to stay out of sight. 
+      A hideout's trades focus on secrecy, teamwork and efficiency when running missions.
+      Your HQ is incredibly difficult to locate and you put an extreme emphasis on laying low and following plans.
+      `,
+    "special" : `Hidden Entrance: You take +1d on heat rolls and if you roll a success, each PC gains two luck.`,
+    "xp" : "",
+    "trades": [{
+      "name": "Bestiary",
+      "text": `You always have fresh mounts, which come with an edge (choose one): aquatic - armored - fast - 
+        flying - intelligent - magical - terrifying. Your mount can help out on a roll, but you risk losing it.`,
     },{
-      "name": "Pack Rats",
-      "text": `Your lair is a jumble of stolen items. When you roll to acquire an asset, take +1d.`,
+      "name": "Den of Thieves",
+      "text": `Each PC may add +1 action rating to Prowl, Finesse, or Tinker (up to a max rating of 3). 
+      Each player may choose the action they prefer (you don’t all have to choose the same one). 
+      If you take this ability during initial character and guild creation, it supersedes the normal starting limit for action ratings.`,
     },{
-      "name": "Second Story",
+      "name": "Dojo",
+      "text": `When you perform a group action, you may count multiple 6s from different rolls as a critical success. 
+      This trade's resource's is a master to train you, which also functions as personnel equal to your tier.`,
+    },{
+      "name": "Gambling Den",
+      "text": `Each PC skims 1 gold on the side every downtime phase. You can pay light cost to automatically 
+        recruit the following personnel types: grunts - thieves - tricksters.`,
+    },{
+      "name": "Gear Locker",
+      "text": `Every PC always has a supply of the following: smoke bombs (T1) - sunrods (T1) - tar bombs (T2) 
+        - thunderstones (T2) - climbing gear - throwing weapons - traps. You also gain 1 extra supply slot.`,
+    },{
+      "name": "Inflitrators",
       "text": `When you execute a clandestine infiltration, you get +1d to the engagement roll.`,
     },{
-      "name": "Slippery",
-      "text": `When you roll entanglements, roll twice and keep the one you want. When you reduce heat on the crew, take +1d.`,
+      "name": "Leave No Trace",
+      "text": `When you keep an operation quiet or make it look like an accident, 
+        you get half the rep value of the target (round up) instead of zero. 
+        When you end downtime with zero heat, take +1 rep. There are many clients who value quiet operations. 
+        This ability rewards you for keeping a low-profile.`,
     },{
-      "name": "Synchronized",
-      "text": `When you perform a group action, you may count multiple 6s from different rolls as a critical success.`,
+      "name": "Lexicon of Ways",
+      "text": `You have accumulated a massive collection of Ways. When undertaking a Journey 
+        in your Realm you always know a way connecting the origin and destination. 
+        This may be taken a second time and the PCs take +1d on challenges made during a Journey.`,
     },{
-      "name": "Lurking",
-      "text": `When you follow someone to their destination, take +1d to avoid being noticed.`,
+      "name": "Obstacle Course",
+      "text": `Each PC can immediately place one extra dot in a Prowess action of their choice.`,
+    },{
+      "name": "Planning Room",
+      "text": `Take +1d on engagement rolls for the following plans: pull a trick, talk it out, sneak in & out.`,
+    },{
+      "name": "Quality Burglary Gear",
+      "text": `Your PCs burglary gear has the quality tag.`,
+    },{
+      "name": "Quality Subterfuge Supplies",
+      "text": `Your PCs subterfuge supplies have the quality tag.`,
+    },{
+      "name": "Roost",
+      "text": `Before a job, you can roll your dungeon tier to gather information about a target. 
+        Your ravens, bats, or other small, winged creatures are always on the lookout for you. 
+        You can also use these to communicate with distant factions.`,
+    },{
+      "name": "Something Up the Sleave",
+      "text": `You get 2 free load of gear.`,
+    },{
+      "name": "Uncompromised Training",
+      "text": `You have established routine, grueling, and relentless training that has hardened the PCs. 
+        You get +1d to resistance rolls. It doesn’t confer any special toughness to your personnel.`,
     }],
-    "upgrades" : ["Theif Rigging:2 free load of tools or gear","Underground maps & passkeys","Elite Rooks","Elite Skulks","Composed:+1 stress box"]
+    "upgrades" : []
   },
-  "Wayfinders": {
-    "name": "Wayfinders",
-    "xp" : "Establish a way, discover a new shard, map a new site or ruin, or acquire a new client.",
-    "abilities": [{
-      "name": "Like Part of the Family",
-      "text": `Create one of your vehicles as a cohort (use the vehicle edges and flaws, below). Its quality is equal to your Tier +1.`,
+  "Stronghold": {
+    "name": "Stronghold",
+    "short" : "Strength of Arms and Protection",
+    "about" : `A stronghold is a seat of power, security and might.  
+      You build squads and later armies, looking to bring a region under your dominion or root out any 
+      trouble that dares to slink out of the shadows. In a stronghold, people flock to your banners looking 
+      to follow powerful leaders and for protection.
+      `,
+    "special" : `War Banners: You start with personnel salaries 1 and your salaries are always one higher than your tier. 
+      At salaries 5, you attract an enormous beast of war or small army, a single veteran personnel with three edges 
+      that rolls 3d on actions and can face a tier 3 faction on equal footing.`,
+    "xp" : "",
+    "trades": [{
+      "name": "Armed and Ready",
+      "text": `You get 2 free load of weapons & armor.`,
     },{
-      "name": "All Hands",
-      "text": `During downtime, one of your cohorts may perform a downtime activity for the crew to acquire an asset, reduce heat, or work on a long-term project.`,
+      "name": "Armorer",
+      "text": `Each of your personnel gains the armored edge as you equip them with armor. 
+        If they already had it, they gain it again, becoming heavily armored.`,
     },{
-      "name": "Just Passing Through",
-      "text": `During downtime, take -1 heat. When your heat is 4 or less, you get +1d to deceive people when you pass yourselves off as ordinary citizens.`,
+      "name": "Ample workforce",
+      "text": `Each player can tick a clock one time per downtime. 
+        However, you cannot tick a clock another player has ticked with this.`,
     },{
-      "name": "Leverage",
-      "text": `Your crew supplies contraband for other factions. Your success is good for them. Whenever you gain rep, gain +1 rep.`,
+      "name": "Barracks",
+      "text": `You can pay light cost to automatically recruit the following personnel: 
+        grunts - raiders - scouts. These fresh recruits also function as a creature equal to your tier.`,
     },{
-      "name": "Reavers",
-      "text": `When you go into conflict aboard a vehicle, you gain +1 effect for vehicle damage and speed. Your vehicle gains armor.`,
+      "name": "Bestiary",
+      "text": `You always have fresh mounts, which come with an edge (choose one): aquatic - armored - fast - 
+        flying - intelligent - magical - terrifying. Your mount can help out on a roll, but you risk losing it.`,
     },{
-      "name": "Renegades",
-      "text": `Each PC may add +1 action rating to Finesse, Prowl, or Skirmish (up to a max rating of 3).`,
-    }],
-    "upgrades" : ["Smuggler's Rigging:2 items carried are perfectly concealed","Camouflage:vehicles are perfectly concealed at rest","Elite Rovers","Composed:+1 stress box"]
-  },
-  "Arcanomancers": {
-    "name": "Arcanomancers",
-    "xp" : "Acquire a relic, clean a contaminated site, catalog a cosmic source, or have a technical breakthrough.",
-    "abilities": [{
-      "name": "Studied",
-      "text": `Each PC may add +1 action rating to Attune, Study, or Tinker (up to a max rating of 3).`,
+      "name": "Militant",
+      "text": `Each PC may add +1 action rating to Hunt, Prowl, or Skirmish (up to a max rating of 3). 
+        Each player may choose the action they prefer (you don’t all have to choose the same one). 
+        If you take this ability during initial character and guild creation, 
+        it supersedes the normal starting limit for action ratings.`,
     },{
-      "name": "Warderd",
-      "text": `You get +1d to resistance rolls against supernatural threats. You get +1d to healing rolls when you have supernatural harm.`,
+      "name": "Quality Weapons & Armor",
+      "text": `Your PCs weapons and armor have the quality tag.`,
     },{
-      "name": "Researcher",
-      "text": `Each PC gains an additional Vice: Research. When you indulge this vice, you don't overindulge if you clear excess stress. In addition, each player gets a free gambit from now until you indulge this vice again.`,
+      "name": "Quality Tools",
+      "text": `Your PCs tools have the quality tag.`,
+    },{
+      "name": "Smithy",
+      "text": `Each of your personnel gains the deadly edge as you equip them with dangerous weapons. 
+        If they already had it, they take +effect when attacking.`,
+    },{
+      "name": "Supernatural Warding",
+      "text": `You specialize in defense against supernatural trouble. 
+        You gain +1d to resistance rolls against supernatural threats. You get +1d to healing rolls when you have supernatural harm.`,
+    },{
+      "name": "Uncompromised Training",
+      "text": `You have established routine, grueling, and relentless training that has hardened the PCs. 
+        You get +1d to resistance rolls. It doesn’t confer any special toughness to your personnel.`,
+    },{
+      "name": "War Room",
+      "text": `Take +1d on engagement rolls for the following raid plans: set a trap, slaughter, smash & grab.`,
     }],
     "upgrades" : []
   },
