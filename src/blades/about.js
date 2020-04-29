@@ -17,7 +17,7 @@ let factions = FACTIONS.map(F => {
 })
 
 
-import {PCPLAYBOOKS,CREWPLAYBOOKS,GEAR,BONDS,CREWUPGRADES,PERSONNEL,PLANS} from "./playbooks.js"
+import {PCPLAYBOOKS,CREWPLAYBOOKS,GEAR,BONDS,CREWUPGRADES,PERSONNEL,PLANS,UNIVERSALADV} from "./playbooks.js"
 
 const ABOUT = `
 <div class="p-1 m-1" align="left">
@@ -85,54 +85,43 @@ const ABOUT = `
   <div class="m-1 p-1">
     <p>Your guild is your crew. It isn't a secretive band (unless you choose the Shadows), but an intentionally public one. 
     Part business, part society, your goal is to make it thrive so that everyone in the Outlands 
-    knows its name and seeks its services. What service do you provide?  
+    knows its name and seeks its services. Each guild has a selection of services, what does yours specialize in?  
     </p>
     <p>
       When creating your guild, select a shard where its headquarters is located. 
       It always starts as a small affair, but through hard work it will grow. 
-      The key way to grow your guild is by establishing trades – a capability that you are known for. 
-      Establishing a trade takes time and resources. Time is the easiest factor – 
-      you spend a downtime activity on building the trade. The resource half is the complicated part, 
-      it takes more than coin, and a trade requires specialized tools, knowledge and/or personnel. 
-      The only way to obtain these key resources is by doing a job to obtain them.    
+      To do this you will make advancements – a collection of experience, special processes, 
+      buildings, and networked connections. Establishing an advancement takes time and resources. 
+      Time is the easiest factor – every advancement requires a long term project that has a clock with 8 segments. 
+      The resource half is the complicated part, it takes more than coin, and may require specialized tools, 
+      knowledge and/or personnel. The only way to obtain these key resources is by doing a job to obtain them. 
+      Work with the GM on what is required.      
     </p>
-    <button class="btn btn-light btn-block" type="button" data-toggle="collapse" data-target="#standardUpgrades">
-      <h3 class="m-0" align="left">Common Upgrades</h3>
-    </button>
-    <div id="standardUpgrades" class="px-2 pb-2 collapse">
-      <div v-for="u in upgrades">
-        <bi>{{u[0]}}:</bi> {{u[1]}}
-        <div class="px-2" v-if="u[2]"><em>{{u[2]}}</em></div>
-      </div>  
-    </div>
+    <p>
+      Turf is an important advancement open to all guilds. At its most basic it represents that your guild has expanded to another shard – the job you perform will determine where. Once you have more turf it is up to you and the GM to determine where new advancements are located. That will help the GM to develop the story and potential jobs for the guild. However, turf also represents more than physical territory – clientele, areas of expertise, goods, etc – and each guild describes what its turf may represent.
+    </p>
 
     <button class="btn btn-light btn-block mb-2" type="button" data-toggle="collapse" data-target="#personnel">
       <h3 class="m-0" align="left">Personnel</h3>
     </button>
     <div id="personnel" class="px-2 pb-2 collapse">
-      <p>Your personnel is group or an expert who works for your crew. To recruit new personnel, spend two upgrades and create them using the process below.</p>
-      <h5>Groups</h5>
-      Choose a type from the list below:
-      <div v-for="p in personnel">
-        <bi>{{p[0]}}:</bi> {{p[1]}}
-      </div>
-      <p>A group has scale and quality equal to your current crew Tier. It increases in scale and quality when your crew moves up in Tier.
-      Some crew upgrades will add the “Elite” feature to a group, which gives them +1d when they roll for a given Type. 
-      <em>So, if you’re Tier I and have a group of Elite Soldiers (+1d), they would roll 2d when they try to defend a target.</em></p>
-      
-      <h5>Experts</h5>
-      <p>Record the expert’s type (their specific area of expertise). They might be a Doctor, Alchemist, 
-      Bounty Hunter, Spy, Diplomat, etc. An expert has quality equal to your current crew Tier +1. Their scale is always
-      zero (1 person). Your experts increase in quality when your crew moves up in Tier.</p>
+      <p>
+        Your personnel is group or an expert who works for your crew. Groups are just that, a number of individuals that have a limited skill set – they have 1d in two actions (they have a quality of 1). You can depend upon them to get their job done, most of the time. The power of a groups is their scale – their scale is equal to your guild’s tier. Use their scale to your advantage when working for effect. An expert is a single individual who has a focused skill set, they have two actions, but their quality is equal to your guild’s tier+1. When your guild’s tier changes – either up or down – the scale of your groups and rank of your expert’s change accordingly.
+      </p>
+      <p>
+        You obtain personnel just like any other advancement – through time (a long term project clock) and resources (i.e. a job). However, some guilds have other advancements that allow them to recruit certain personnel without either the time/job requirement.
+      </p>
+      <p>
+        When creating personnel, select the two actions that they specialize in. These are the only two that they have (unless you choose the versatile edge), and they roll 0d for all other actions that they take. As an optional step, you may give them up to two edges and an equal number of flaws.
+      </p>
 
-      <h5>Edges & Flaws</h5>
-      When you create personnel, give them one or two edges and an equal number of flaws. 
       <div><bi>Edges</bi></div>
       <ul>
         <li><b>Loyal:</b> The personnel can't be bribed or turned against you.</li>
-        <li><b>Tenacious:</b> The personnel won't be deterred from a task.</li>
-        <li><b>Stern:</b> The personnel is known for their tough attitude and reputation.</li>
         <li><b>Independent:</b> The personnel can be trusted to make good decisions in the absence of orders and act on their own initiative.</li>
+        <li><b>Proactive:</b> The personnel can perform one downtime activity.</li>
+        <li><b>Tenacious:</b> The personnel won't be deterred from a task.</li>
+        <li><b>Versatile:</b> Gain two more skilled actions of your choice.</li>
       </ul>
       <div><bi>Flaws</bi></div>
       <ul>
@@ -141,12 +130,6 @@ const ABOUT = `
         <li><b>Unreliable:</b> The personnel isn't always available, due to other obligations, stupefaction from their oastimes, etc.</li>
         <li><b>Wild:</b> The personnel is drunken, debauched, or loud-mouthed.</li>
       </ul>
-
-      <h5>Modifying Personnel</h5>
-      <p>You can add an additional type to a group or expert by spending two crew
-      upgrades. When personnel performs actions for which its types apply, it uses its
-      full quality rating. Otherwise, its quality is zero. Any personnel can have up to
-      two types.</p>
 
       <h5>Using Personnel</h5>
       <p>When you send personnel to achieve a goal, roll their quality to see how it goes.
@@ -178,10 +161,10 @@ const ABOUT = `
       </button>
       <div :id="'crew-'+i" class="collapse px-2">
         <p>{{p.about}}</p>
-        <h5>Trades</h5>
-        <div v-for="a in p.trades" class="px-2"><bi>{{a.name}}:</bi> {{a.text}}</div>
-        <h5>Upgrades</h5>
-        <div v-for="u in p.upgrades" class="px-2"><bi>{{u[0]}}</bi><span v-if="u[1]">: {{u[1]}}</span></div>
+        <p><bi>Trades:</bi> {{p.xp}}</p>
+        <p><bi>Turf:</bi> {{p.turf}}</p>
+        <h5>Advancements</h5>
+        <div v-for="a in p.advancements" class="px-2"><bi>{{a.name}}:</bi> {{a.text}}</div>
       </div>
     </div>
 
@@ -280,7 +263,7 @@ const alphaSort = (a,b) => {
 }
 let playbooks = Object.values(PCPLAYBOOKS).sort(alphaSort)
 let crews = Object.values(CREWPLAYBOOKS).sort(alphaSort).map(c => {
-  c.upgrades = c.upgrades.map(u => u.split(":"))
+  c.advancements = UNIVERSALADV.concat(c.advancements).sort(alphaSort)
   return c 
 })
 

@@ -473,8 +473,9 @@ const CREWPLAYBOOKS = {
     "special" : `Guards and Wards. Establish an area around your HQ and gain arcane power within it (choose 3):  
       weather control - magical sentries - mindlink - dark whispers - living plants - illusions - corrupted wildlife. 
       Roll your tier as a fortune roll to determine their effect as a trap, trick, or spell.`,
-    "xp" : "Acquire a relic, clean a contaminated site, catalog a cosmic source, or have a technical breakthrough.",
-    "trades": [{
+    "xp" : "Acquire a relic, have an arcane/technical breakthrough, catalog a cosmic source, or explore the unknown.",
+    "turf" : `An extension/library/lab on another shard; a new field of arcane expertise; an expanded relic collection.`,
+    "advancements": [{
       "name": "Academy",
       "text": `All personnel add Invoke as an action. Choose a path of magic that they can cast. 
       If they already have Invoke, they instead gain the adept edge.`,
@@ -516,12 +517,6 @@ const CREWPLAYBOOKS = {
       "text": `Choose a single magic path. You always have a supply of any tier 1 potion and a single 
       tier 2 potion of that path. The tier 2 potion is the same for everyone and chosen when the trade is established.`,
     },{
-      "name": "Quality Documents",
-      "text": `Your PCs documents have the quality tag.`,
-    },{
-      "name": "Quality Implements",
-      "text": `Your PCs arcane implements have the quality tag.`,
-    },{
       "name": "Scrying Pool",
       "text": `You can pay light cost to see any location in your region. You take +1d on your next roll when you apply what you saw.`,
     },{
@@ -545,8 +540,9 @@ const CREWPLAYBOOKS = {
       perhaps it is a volcano, or it contains a giant steamworks, or harnesses the power of mighty river.`,
     "special" : `Your HQ has a power track. Each downtime, you gain power equal to 1 + tier. 
       Any player can spend these to take +1d on a downtime activity.`,
-    "xp" : "Acquire a relic, clean a contaminated site, catalog a cosmic source, or have a technical breakthrough.",
-    "trades": [{
+    "xp" : "Clean a contaminated site, create a new technologic wonder, help a people through technology, or harness a new source of power.",
+    "turf" : `A new source of power; labs or experiment test sites; a new field of expertise.`,
+    "advancements": [{
       "name": "Alchemist Lab",
       "text": `You always have a supply of any tier 1 alchemical. 
         You can also pay 1 gold to acquire a single tier 2 alchemical.`,
@@ -571,12 +567,6 @@ const CREWPLAYBOOKS = {
       "name": "Mines",
       "text": `You have a mine entrance with a large mineshaft extending away from it. 
         You take +2d on discovery rolls and can make an immediate discovery roll when this trade is created.`,
-    },{
-      "name": "Quality Documents",
-      "text": `Your PCs documents have the quality tag.`,
-    },{
-      "name": "Quality Tools",
-      "text": `Your PCs tools have the quality tag.`,
     },{
       "name": "Test Chamber",
       "text": `You can make personnel take a contraption into the chamber and test it out. 
@@ -606,8 +596,9 @@ const CREWPLAYBOOKS = {
     "short" : "Merchandise from across the Outlands",
     "about" : ``,
     "special" : ``,
-    "xp" : "",
-    "trades": [{
+    "xp" : "Acquire product supply, execute a high profile sale, out maneuver the competition, or secure new territory.",
+    "turf" : `A new bazaar; supply of goods; different goods specialty; important group of clients.`,
+    "advancements": [{
       "name": "Bestiary",
       "text": `You always have fresh mounts, which come with an edge (choose one): aquatic - armored - fast - 
         flying - intelligent - magical - terrifying. Your mount can help out on a roll, but you risk losing it.`,
@@ -631,13 +622,7 @@ const CREWPLAYBOOKS = {
       "name": "Personal Clothier",
       "text": `+1d engagement roll for social plans.`,
     },{
-      "name": "Quality Documents",
-      "text": `Your PCs documents have the quality tag.`,
-    },{
-      "name": "Quality Luxury Goods",
-      "text": `Your PCs luxury goods have the quality tag.`,
-    },{
-      "name": "Side Business",
+      "name": "Business",
       "text": `You have an established business. What wonders do you sell? 
         Roll your tier minus the threat of the region. You earn that much coin in downtime.`,
     },{
@@ -649,6 +634,13 @@ const CREWPLAYBOOKS = {
     },{
       "name": "Warehouses",
       "text": `Stockpiles give you +1d to acquire assets.`,
+    },{
+      "name": "Informants",
+      "text": `+1d gather info for job within your shard's region.`,
+    },{
+      "name": "Only the Best",
+      "text": `You only carry the finest of what you specialize in. The product quality is equal to your Tier+2. 
+        When you deal with a crew or faction, the GM will tell you who among them buys your goods (one, a few, many, or all).`,
     }],
     "upgrades" : []
   },
@@ -660,8 +652,9 @@ const CREWPLAYBOOKS = {
       Your HQ is incredibly difficult to locate and you put an extreme emphasis on laying low and following plans.
       `,
     "special" : `Hidden Entrance: You take +1d on heat rolls and if you roll a success, each PC gains two luck.`,
-    "xp" : "",
-    "trades": [{
+    "xp" : "Conduct a successful espionage, sabotage, or theft operation.",
+    "turf" : `An important group of clients; a remote hideout.`,
+    "advancements": [{
       "name": "Bestiary",
       "text": `You always have fresh mounts, which come with an edge (choose one): aquatic - armored - fast - 
         flying - intelligent - magical - terrifying. Your mount can help out on a roll, but you risk losing it.`,
@@ -703,12 +696,6 @@ const CREWPLAYBOOKS = {
       "name": "Planning Room",
       "text": `Take +1d on engagement rolls for the following plans: pull a trick, talk it out, sneak in & out.`,
     },{
-      "name": "Quality Burglary Gear",
-      "text": `Your PCs burglary gear has the quality tag.`,
-    },{
-      "name": "Quality Subterfuge Supplies",
-      "text": `Your PCs subterfuge supplies have the quality tag.`,
-    },{
       "name": "Roost",
       "text": `Before a job, you can roll your dungeon tier to gather information about a target. 
         Your ravens, bats, or other small, winged creatures are always on the lookout for you. 
@@ -720,6 +707,12 @@ const CREWPLAYBOOKS = {
       "name": "Uncompromised Training",
       "text": `You have established routine, grueling, and relentless training that has hardened the PCs. 
         You get +1d to resistance rolls. It doesn’t confer any special toughness to your personnel.`,
+    },{
+      "name": "Informants",
+      "text": `+1d gather info for jobs within your shard's region.`,
+    },{
+      "name": "Lookouts",
+      "text": `+1d to Survey or Hunt in your shard's region.`,
     }],
     "upgrades" : []
   },
@@ -734,8 +727,9 @@ const CREWPLAYBOOKS = {
     "special" : `War Banners: You start with personnel salaries 1 and your salaries are always one higher than your tier. 
       At salaries 5, you attract an enormous beast of war or small army, a single veteran personnel with three edges 
       that rolls 3d on actions and can face a tier 3 faction on equal footing.`,
-    "xp" : "",
-    "trades": [{
+    "xp" : "Defend a people, root out trouble, secure a location, or succeed in battle.",
+    "turf" : `A village/city under your protection; a foe/faction you specialize in fighting; new fortification; memorial to those that have fallen.`,
+    "advancements": [{
       "name": "Armed and Ready",
       "text": `You get 2 free load of weapons & armor.`,
     },{
@@ -761,12 +755,6 @@ const CREWPLAYBOOKS = {
         If you take this ability during initial character and guild creation, 
         it supersedes the normal starting limit for action ratings.`,
     },{
-      "name": "Quality Weapons & Armor",
-      "text": `Your PCs weapons and armor have the quality tag.`,
-    },{
-      "name": "Quality Tools",
-      "text": `Your PCs tools have the quality tag.`,
-    },{
       "name": "Smithy",
       "text": `Each of your personnel gains the deadly edge as you equip them with dangerous weapons. 
         If they already had it, they take +effect when attacking.`,
@@ -781,10 +769,38 @@ const CREWPLAYBOOKS = {
     },{
       "name": "War Room",
       "text": `Take +1d on engagement rolls for the following raid plans: set a trap, slaughter, smash & grab.`,
+    },{
+      "name": "Lookouts",
+      "text": `+1d to Survey or Hunt in your shard's region.`,
     }],
     "upgrades" : []
   },
 }
+
+const UNIVERSALADV = [
+  {
+    "name": "Secure Lair",
+    "text": `Your HQ has locks, alarms, and traps to thwart intruders. A second advancement improves the defenses to include arcane measures. You might roll your guild’s Tier if these measures are ever put to the test, to see how well they thwart an intruder.`,
+  },{
+    "name": "Vault",
+    "text": `Your HQ has a secure vault, increasing your storage capacity for coin to 8. A second advancement increases your capacity to 16. A separate part of your vault can be used as a holding cell.`,
+  },{
+    "name": "Quality",
+    "text": `Each advancement improves the quality rating of all the PCs’ items of that type, beyond the quality established by the crew’s Tier and fine items. You can improve the quality of Documents, Gear (covers Burglary Gear and Climbing Gear), Arcane Implements, Subterfuge Supplies, Tools (covers Demolitions Tools and Tinkering Tools), and Weapons.`,
+  },{
+    "name": "Training",
+    "text": `If you have a Training upgrade, you earn 2 xp (instead of 1) when you train a given xp track during downtime (Insight, Prowess, Resolve, or Playbook xp). This upgrade essentially helps you advance more quickly. This advancement may be taken multiple times – once for each xp tack.  `,
+  },{
+    "name": "Patron",
+    "text": `When you advance your Tier, it costs half the coin it normally would. Who is your patron? Why do they help you?`,
+  },{
+    "name": "Turf",
+    "text": `Expand your guild. This may be taken multiple times. Each turf counts as one reputation (up to a max of 4). Where - what shard? What does it represent to your guild?`,
+  },{
+    "name": "Personnel",
+    "text": `You recruit new personnel. Are they are a group or an expert? What actions do they specialize in? Add up to 2 edges and an equal number of flaws.`,
+  }
+]
 
 const CREWUPGRADES = [
   [`Personnel`,`Personnel is either a group of individuals or a single expert NPC who works for your crew. For all the details on personnel, see the following pages.`],
@@ -847,4 +863,4 @@ const PERSONNEL = [
   [`Science`,`Cyberneticists, sensor technicians, physicists.`]	
 ]
 
-export {PCPLAYBOOKS,CREWPLAYBOOKS,PLANS,GEAR,BONDS,CREWUPGRADES,PERSONNEL}
+export {PCPLAYBOOKS,CREWPLAYBOOKS,PLANS,GEAR,BONDS,CREWUPGRADES,PERSONNEL,UNIVERSALADV}
