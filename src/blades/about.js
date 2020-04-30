@@ -25,14 +25,59 @@ const ABOUT = `
   Your characters are not ruffians or rogues but brave entrepreneurs (*adventurers*) who have just established 
   their own guild. You will perform jobs to grow the guild and its reputation.  
   </p>
-  <p>It draws heavily on <em>Blades in the Dark</em>, but also <em>Wicked Ones</em>, and the <em>Typhoon Atolls</em></p>
+  <p>It draws heavily on <em>Blades in the Dark</em>, but also <em>Band of Blades</em>, <em>Wicked Ones</em>, and the <em>Typhoon Atolls.</em></p>
 
   <h2>Basics</h2>
   <div class="m-1 p-1">
-    <p>The majority of the core FitD rules remain the same - with the exception of adding luck. </p>
-    <h4>Luck</h4>
-    Add luck to your crew when you roll a 6 or critical on a risky action and you didn't spend luck on a bonus die. 
-    You can spend luck in place of stress - one for one [<em>credit: Scum & Villainy</em>]. 
+
+    <h3>Game Structure</h3>
+    <p>
+      Play rotates through two main phases. It is good to start with the mission phase where you play out the primary mission (chosen by the Commander), and resolve the secondary mission with an engagement roll. Afterwards, roleplay free play scenes, and the guild consumes required resources. Then transition to the guild phase. At the guild level, the players perform their leadership roles. Guild actions are enacted and missions prioritized and selected. Then the cycle comes back to the mission phase.
+    </p>
+    <div class="container table-gen mb-2" align="center">
+      <div class="row">
+        <div class="col table-gen" align="left">
+          <div align="center">Missions</div>
+          <div><b>Priority.</b> Commander picks primary and secondary mission.</div>
+          <div><b>Primary Mission.</b> Play out the details at the table. Crew gains xp.</div>
+          <div><b>Secondary Mission.</b> Resolve the outcome via an engagement roll by the Marshal.</div>
+          <div><b>Bookkeeping.</b> Gain mission penalties, mission rewards, and track trouble.</div>
+          <div><b>Free play.</b> Roleplay what happens between at the guild while on mission and between this mission phase and the next.</div>
+          <div><b>Go to Guild Phase.</b></div>
+        </div>
+        <div class="col-1 table-gen"></div>
+        <div class="col table-gen" align="left">
+          <div align="center">Guild</div>
+          <div><b>Guild Actions.</b> Choose and resolve guild actions (see Quartermaster/Marshal).</div>
+          <div><b>Advancements.</b> Commander chooses which advancement to work towards - if not working two.</div>
+          <div><b>New Mission Generation.</b> Commander picks mission type to focus. GM generates missions.</div>
+          <div><b>Go to Mission Phase.</b></div>
+        </div>
+      </div>
+    </div>
+
+    <h3>Intel</h3>
+    <p>
+      The commander tracks intel region by region - it is how much you know about the region and the factions within it. The commander may spend 1 intel to add +1d to any engagement roll. You gain intel from certain mission rewards. Before you pick primary and secondary missions, you may ask intel questions based on how much intel you hold (see below).
+    </p>
+
+    <h3>Trouble & Danger</h3>
+    <p>
+      Because the guilds are legal entities, and the PCs are not a bunch of thieves – most of them - the heat mechanic is replaced with trouble and chaos. This represents that even the best intentions can unravel or create unintended consequences. Trouble models the instability generated from the missions that the guild performs and danger is just that: how dangerous a region is for common folk. 
+    </p>
+    <p>
+      After a mission determine the trouble it created. Add +1 trouble for a high-profile job. Add +1 trouble if the situation happened on hostile turf. Add +1 trouble if you're at war. Add +2 trouble if killing was involved. Plus any additional trouble from complications or devil's bargains during the session. It is a commander's responsibility to track every region’s trouble/chaos. 
+    </p>
+    <p>
+      Trouble and danger, also creates complications after a mission and when making a journey between shards. You may work to reduce trouble as a guild action. However, the only way to reduce danger is to perform a mission specifically focused on that.   
+    </p>
+
+    <h3>Luck</h3>
+    <p>
+      Add luck to your crew when you roll a 6 or critical on a risky action and you didn't spend luck on a bonus die. 
+      You can spend luck in place of stress - one for one [<em>credit: Scum & Villainy</em>]. 
+    </p>
+
   </div>
 
   <h2>Characters</h2>
@@ -88,6 +133,9 @@ const ABOUT = `
     knows its name and seeks its services. Each guild has a selection of services, what does yours specialize in?  
     </p>
     <p>
+      Your guild is larger than the crews in Blades in the Dark. As an organization there is a leadership level that guides and directs it. Influenced by Band of Blades, there are three core positions: Commander, Marshal, and Quartermaster. Their actual titles differ depending upon what guild you choose, but their functions are always the same.   
+    </p>
+    <p>
       When creating your guild, select a shard where its headquarters is located. 
       It always starts as a small affair, but through hard work it will grow. 
       To do this you will make advancements – a collection of experience, special processes, 
@@ -100,6 +148,47 @@ const ABOUT = `
     <p>
       Turf is an important advancement open to all guilds. At its most basic it represents that your guild has expanded to another shard – the job you perform will determine where. Once you have more turf it is up to you and the GM to determine where new advancements are located. That will help the GM to develop the story and potential jobs for the guild. However, turf also represents more than physical territory – clientele, areas of expertise, goods, etc – and each guild describes what its turf may represent.
     </p>
+
+    <button class="btn btn-light btn-block" type="button" data-toggle="collapse" data-target="#commander">
+      <h3 class="m-0" align="left">Commander</h3>
+    </button>
+    <div id="commander" class="px-2 pb-2 collapse">
+      <bi>Duties:</bi>
+      <ul>
+        <li><b>Track Trouble & Danger.</b> Missions create unintended consequences in a region and as a result danger grows. Each region has its own trouble/danger track. Both impact repercussions from missions and danger impacts any journey’s your crews make. The marshal may spend guild actions to reduce trouble but you have to undertake special missions to reduce danger. </li>
+        <li><b>Pick Advancements.</b> You select what the guild is working to accomplish. A guild may only be working on two advancements at any time. </li>
+        <li><b>Track and Spend Intel.</b> Spend intel to add +1d to mission engagement rolls. Ask intel questions before each mission. Intel can be gained from mission rewards. Track intel by region.  </li>
+        <li><b>Pick Missions.</b> Decide on a type of mission to focus on (assault, recon, diplomatic, or supply) and tell the GM. The GM will tell you what’s available. Pick two missions to perform and designate one “primary,” to be played out at the table. The other is secondary and resolved with an engagement roll. If you were presented with a third mission, you automatically fail it. </li>
+        <li><b>Work with Other Roles.</b> Consult with the rest of the players to make the best decisions you can, but you have the final say in the duties you are tasked with. </li>
+      </ul>
+    </div>
+
+    <button class="btn btn-light btn-block" type="button" data-toggle="collapse" data-target="#marshal">
+      <h3 class="m-0" align="left">Marshal</h3>
+    </button>
+    <div id="marshal" class="px-2 pb-2 collapse">
+      <bi>Duties:</bi>
+      <ul>
+        <li><b>Assign Who Goes On And Leads Missions.</b> Decide who goes on missions. It is your call on who and how many guildmembers go on a mission. You also say who’s in charge.</li>
+        <li><b>Track Guildmembers.</b> Decide who goes on missions. It is your call on who and how many guildmembers go on a mission. You also say who’s in charge.</li>
+        <li><b>Make Engagement Rolls.</b></li>
+        <li><b>Ensure Guildmembers Advance.</b> Make sure the group remembers to track xp after missions. Secondary missions grant 2 xp to their crew regardless of outcome. </li>
+        <li><b>Work with Other Roles.</b> Consult with the rest of the players to make the best decisions you can, but you have the final say in the duties you are tasked with. </li>
+      </ul>
+    </div>
+
+    <button class="btn btn-light btn-block mb-2" type="button" data-toggle="collapse" data-target="#quartermaster">
+      <h3 class="m-0" align="left">Quartermaster</h3>
+    </button>
+    <div id="quartermaster" class="px-2 pb-2 collapse">
+      <bi>Duties:</bi>
+      <ul>
+        <li><b>Track and Spend Supply.</b> You gain supply primarily from supply mission rewards. Spend supply for additional guild actions or to boost a guild action.</li>
+        <li><b>Perform Guild Actions.</b> Between mission phases, you may perform two guild actions.</li>
+        <li><b>Track and Use Materiel and Non-Guild Personnel.</b> Expend materiel to make missions more successful. Work on projects to change the position of the Guild.</li>
+        <li><b>Work with Other Roles.</b> Consult with the rest of the players to make the best decisions you can, but you have the final say in the duties you are tasked with. </li>
+      </ul>
+    </div>
 
     <button class="btn btn-light btn-block mb-2" type="button" data-toggle="collapse" data-target="#personnel">
       <h3 class="m-0" align="left">Personnel</h3>
@@ -168,6 +257,13 @@ const ABOUT = `
       </div>
     </div>
 
+    <button class="btn btn-light btn-block mt-2" type="button" data-toggle="collapse" data-target="#uadv">
+      <h3 class="m-0" align="left">Universal Advancements</h3>
+    </button>
+    <div id="uadv" class="collapse px-2">
+      <div v-for="a in uAdvance" class="px-2"><bi>{{a.name}}:</bi> {{a.text}}</div>
+    </div>
+
   </div>
 
   <h2>Jobs</h2>
@@ -228,6 +324,33 @@ const ABOUT = `
 
   </div>
 
+  <h2>Guild Actions</h2>
+  <div class="m-1 p-1">
+    <p>
+      After missions, you may perform 2 campaign guild actions. Take additional campaign actions by spending supply one-for-one. Spend a supply to boost an action in addition to any other costs. You can do each action once per campaign phase (except acquire assets and long-term projects).
+    </p>
+    <h3>Acquire Assets</h3>
+    <p>
+      You must spend 1 supply to use this action. Work your connections to get an asset that you need. Roll your tier, or the shard’s asset rating (the shard where you’re looking), whichever is lower. The result indicates the quality of the asset (1-3: Tier 1. 4/5: Tier 2. 6: Tier 3. crit: Tier 4). 
+      </br><b>Boosted:</b> Upgrade result by one level. You may spend multiple supply.
+    </p>
+    <h3>Long Term Project</h3>
+    <p>
+      Work on a long-term project, if you have the means. Pick a guildmember to lead the project. They roll an action and mark segments on the project clock based on the result (1-3: One. 4/5: Two. 6: Three. crit: Five). You can do this guild action multiple times, but only if working on a different project each time. You should always have at least two guild advancements as on-going long term projects.  
+      </br><b>Boosted:</b> Upgrade result by one level. You may spend multiple supply.
+    </p>
+    <h3>Recruit</h3>
+    <p>
+      Gain up to two new members to fill out your crews. You can maintain two crews of four per tier of your guild.
+      </br><b>Boosted:</b> The new members have a number of advances equal to two per tier of your guild.
+    </p>
+    <h3>Recuperation</h3>
+    <p>
+      Take time to let the guild tend wounds and rest. Each guildmember marks a tick in any harm row. Once a row’s healing ticks are full, erase the ticks and injuries in that row. 
+      </br><b>Boosted:</b> Every guildmember gains a second healing tick.
+    </p>
+  </div>
+
   <h2>Faction Forces</h2>
   <div class="m-1 p-1">
     <div v-for="(f,i) in factions" v-if="f.forces">
@@ -263,7 +386,7 @@ const alphaSort = (a,b) => {
 }
 let playbooks = Object.values(PCPLAYBOOKS).sort(alphaSort)
 let crews = Object.values(CREWPLAYBOOKS).sort(alphaSort).map(c => {
-  c.advancements = UNIVERSALADV.concat(c.advancements).sort(alphaSort)
+  c.advancements = c.advancements.sort(alphaSort)
   return c 
 })
 
@@ -279,6 +402,7 @@ const UI = (app)=>{
       return {
         playbooks,
         crews,
+        uAdvance : UNIVERSALADV.sort(alphaSort),
         gear : GEAR,
         bonds : BONDS,
         upgrades : CREWUPGRADES,

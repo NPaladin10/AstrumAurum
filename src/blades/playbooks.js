@@ -523,12 +523,6 @@ const CREWPLAYBOOKS = {
       "name": "Supernatural Warding",
       "text": `You specialize in defense against supernatural trouble. 
         You gain +1d to resistance rolls against supernatural threats. You get +1d to healing rolls when you have supernatural harm.`,
-    },{
-      "name": "Vehicle Bay",
-      "text": `You have a vehicle that your personnel upkeep (choose one): 
-        gas sub - hot air balloon - horseless cart. It has edges (choose two): armored - 
-        dependable - camouflaged - fast - nimble.  It also has a flaw (choose one): clumsy - 
-        distinct - noisy - rickety - slow. The vehicle is fully repaired or rebuilt each recovery.`,
     }],
     "upgrades" : []
   },
@@ -799,6 +793,11 @@ const UNIVERSALADV = [
   },{
     "name": "Personnel",
     "text": `You recruit new personnel. Are they are a group or an expert? What actions do they specialize in? Add up to 2 edges and an equal number of flaws.`,
+  },{
+      "name": "Vehicle",
+      "text": `You have a specialized vehicle that your workers upkeep. Its nature depends upon the realm/region where it will operate. It can easily accomidate up to six passengers and their
+        respective loads. It has a quality equal to your guild's tier. The vehicle is fully repaired or rebuilt every guild phase. 
+        You may take this advancement multiple times to have more than one vehicle.`
   }
 ]
 
